@@ -1,0 +1,2 @@
+(func filter (predicate arr acc) (cond (isnull arr) () (filter predicate (tail arr) (cond (predicate (head arr)) (cons (head arr) acc) acc))))
+(filter 'islist ((1 2 3) 4 ()) ())
