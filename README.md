@@ -10,5 +10,10 @@ Language examples are located in the `./kekw-examples`.
 
 ## Generate java class for parser
 ```shell script
-./scripts/generate-parser.sh
+./scripts/generate_parser.sh
+```
+
+## Run tests
+```shell script
+./scripts/run_tests.sh
 ```
