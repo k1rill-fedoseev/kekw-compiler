@@ -1,7 +1,7 @@
 (setq x 5)
-x // value of 5
-(setq y (plus 1 2)) // atom y gets the value of 3
-y // the value of 3
+x # value of 5
+(setq y (plus 1 2)) # atom y gets the value of 3
+y # the value of 3
 (setq z null)
-z // null
-(setq t '(plus minus times divide)) // t gets the list of four atoms
+z # null
+(setq t '(plus minus times divide)) # t gets the list of four atoms

@@ -27,6 +27,7 @@ class MyLexer implements Parser.Lexer {
         st.wordChars('+', '+');
         st.wordChars('_', '_');
         st.wordChars('.', '.');
+        st.commentChar('#');
         st.ordinaryChar('(');
         st.ordinaryChar(')');
         st.ordinaryChar('\'');

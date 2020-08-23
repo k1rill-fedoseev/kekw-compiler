@@ -4,7 +4,7 @@ def remove_comments(file_path):
         f.seek(0)
 
         for line in lines:
-            formatted_line = line.split('//')[0]
+            formatted_line = line.split('#')[0]
             if '\n' in formatted_line:
                 f.write(formatted_line)
             else:

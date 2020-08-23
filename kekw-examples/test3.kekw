@@ -1,6 +1,6 @@
 (func Cube (arg) (times (times arg arg) arg))
 (func Trivial () 1)
 (func makeList (A) (A))
-Cube 3 // 27
-Trivial // 1
-makeList (1 2 3) // (1 2 3)
+Cube 3 # 27
+Trivial # 1
+makeList (1 2 3) # (1 2 3)
