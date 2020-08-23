@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  kekw-builder:
+    build:
+      context: .
+      target: builder
+  kekw:
+    image: kekw:latest
+    build: .
+    stdin_open: yes
