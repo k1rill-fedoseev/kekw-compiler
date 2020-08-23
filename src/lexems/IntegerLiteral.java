@@ -7,8 +7,6 @@ public class IntegerLiteral implements IElement {
         this.v = v;
     }
 
-    public Object evaluate() { return v; }
-
     @Override
     public String toString() {
         return "IntegerLiteral{" +

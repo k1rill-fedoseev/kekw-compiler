@@ -26,4 +26,4 @@ COPY --from=builder /kekw/out ./out
 
 ENTRYPOINT ["java", "-cp", "out"]
 
-CMD ["interpreter.Interpreter"]
+CMD ["Main"]

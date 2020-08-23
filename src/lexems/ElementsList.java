@@ -17,8 +17,6 @@ public class ElementsList extends LinkedList<IElement> implements IElement {
         add(elem2);
     }
 
-    public Object evaluate() { return null; }
-
     @Override
     public String toString() {
         return "ElementsList" + super.toString();

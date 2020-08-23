@@ -107,9 +107,36 @@ class MyLexer implements Parser.Lexer {
                     yylval = new BooleanLiteral(Boolean.parseBoolean(v));
                     return BOOLEAN;
                 }
+                if (v.equals("quote")) {
+                    return QUOTE;
+                }
+                if (v.equals("setq")) {
+                    return SETQ;
+                }
+                if (v.equals("func")) {
+                    return FUNC;
+                }
+                if (v.equals("lambda")) {
+                    return LAMBDA;
+                }
+                if (v.equals("prog")) {
+                    return PROG;
+                }
+                if (v.equals("cond")) {
+                    return COND;
+                }
+                if (v.equals("while")) {
+                    return WHILE;
+                }
+                if (v.equals("return")) {
+                    return RETURN;
+                }
+                if (v.equals("break")) {
+                    return BREAK;
+                }
                 if (identifierPattern.matcher(v).matches()) {
-                    yylval = new Identifier(v);
-                    return IDENTIFIER;
+                    yylval = new Atom(v);
+                    return ATOM;
                 }
                 yylval = new BadToken(v);
                 return YYUNDEF;

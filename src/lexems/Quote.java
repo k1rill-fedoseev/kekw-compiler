@@ -1,15 +1,15 @@
 package lexems;
 
-public class RealLiteral implements IElement {
-    public final double v;
+public class Quote implements IElement {
+    private final IElement v;
 
-    public RealLiteral(double v) {
+    public Quote(IElement v) {
         this.v = v;
     }
 
     @Override
     public String toString() {
-        return "RealLiteral{" +
+        return "Quote{" +
                 "v=" + v +
                 '}';
     }
