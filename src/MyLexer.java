@@ -58,7 +58,7 @@ class MyLexer implements Parser.Lexer {
                     return REAL;
                 }
                 if (boolPattern.matcher(v).matches()) {
-                    yylval = new BoolLiteral(Boolean.parseBoolean(v));
+                    yylval = new BooleanLiteral(Boolean.parseBoolean(v));
                     return BOOLEAN;
                 }
                 if (identifierPattern.matcher(v).matches()) {

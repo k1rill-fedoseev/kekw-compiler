@@ -25,7 +25,7 @@ import java.io.IOException;
 
 %token <lexems.IntegerLiteral> INTEGER
 %token <lexems.RealLiteral>    REAL
-%token <BooleanLiteral> BOOLEAN
+%token <lexems.BooleanLiteral> BOOLEAN
 %token <lexems.Identifier>     IDENTIFIER
 
 %type <lexems.ElementsList> program

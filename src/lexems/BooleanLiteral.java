@@ -1,9 +1,9 @@
 package lexems;
 
-public class BoolLiteral implements IElement {
+public class BooleanLiteral implements IElement {
     private final boolean v;
 
-    public BoolLiteral(boolean v) {
+    public BooleanLiteral(boolean v) {
         this.v = v;
     }
 
@@ -13,7 +13,7 @@ public class BoolLiteral implements IElement {
 
     @Override
     public String toString() {
-        return "BoolLiteral{" +
+        return "BooleanLiteral{" +
                 "v=" + v +
                 '}';
     }
