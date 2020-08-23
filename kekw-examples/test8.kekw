@@ -1,0 +1,24 @@
+# TEST PREDICATES
+(setq a 1)
+
+(isint 1) # true
+(isatom a) # true
+(isint a) # false
+(isatom 1) # false
+
+(setq b 1.234)
+(isreal b) # true
+(isreal a) # false
+
+(isnull ()) # true
+(isnull (1 2 3)) # false
+
+(islist ()) # true
+(islist a) # false
+(islist (1 2 3)) # true
+
+(setq c true)
+(isbool c) # true
+(isbool a) # false
+
+

@@ -1,3 +1,4 @@
+# EXAMPLE FROM THE DESCRIPTION
 (func Cube (arg) (times (times arg arg) arg))
 (func Trivial () 1)
 (func makeList (A) (A))

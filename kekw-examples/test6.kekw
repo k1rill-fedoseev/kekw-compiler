@@ -1,0 +1,9 @@
+# TEST WHILE
+(setq x 0)
+(func add_one (x) (plus x 1))
+(while (less x 10) (setq x (add_one x)))
+x # 10
+
+(setq x 0)
+(while (less x 10) (cond (greatereq x 5) (break) (setq x (add_one x))))
+x # 5

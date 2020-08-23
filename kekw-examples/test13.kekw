@@ -1,0 +1,8 @@
+# FIBONACCI
+(func fib (n) (cond (greater n 2) (return (plus (fib (minus n 1)) (fib (minus n 2)))) (return 1)))
+(fib 1) # 1
+(fib 2) # 1
+(fib 3) # 2
+(fib 4) # 3
+(fib 5) # 5
+(fib 6) # 8
