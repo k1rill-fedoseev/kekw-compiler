@@ -128,16 +128,21 @@ public class Parser
     S_REAL(4),                     /* REAL  */
     S_BOOLEAN(5),                  /* BOOLEAN  */
     S_IDENTIFIER(6),               /* IDENTIFIER  */
-    S_7_(7),                       /* "'"  */
-    S_8_(8),                       /* "!"  */
-    S_9_(9),                       /* '('  */
-    S_10_(10),                     /* ')'  */
-    S_YYACCEPT(11),                /* $accept  */
-    S_program(12),                 /* program  */
-    S_element(13),                 /* element  */
-    S_literal(14),                 /* literal  */
-    S_list(15),                    /* list  */
-    S_list_elements(16);           /* list_elements  */
+    S_7_(7),                       /* '\''  */
+    S_8_(8),                       /* ')'  */
+    S_9_(9),                       /* ' '  */
+    S_10_n_(10),                   /* '\n'  */
+    S_11_t_(11),                   /* '\t'  */
+    S_12_(12),                     /* '('  */
+    S_YYACCEPT(13),                /* $accept  */
+    S_program(14),                 /* program  */
+    S_element(15),                 /* element  */
+    S_literal(16),                 /* literal  */
+    S_single_separator(17),        /* single_separator  */
+    S_separator(18),               /* separator  */
+    S_optional_separator(19),      /* optional_separator  */
+    S_list(20),                    /* list  */
+    S_list_elements(21);           /* list_elements  */
 
 
     private final int yycode_;
@@ -157,11 +162,16 @@ public class Parser
       SymbolKind.S_7_,
       SymbolKind.S_8_,
       SymbolKind.S_9_,
-      SymbolKind.S_10_,
+      SymbolKind.S_10_n_,
+      SymbolKind.S_11_t_,
+      SymbolKind.S_12_,
       SymbolKind.S_YYACCEPT,
       SymbolKind.S_program,
       SymbolKind.S_element,
       SymbolKind.S_literal,
+      SymbolKind.S_single_separator,
+      SymbolKind.S_separator,
+      SymbolKind.S_optional_separator,
       SymbolKind.S_list,
       SymbolKind.S_list_elements
     };
@@ -182,8 +192,9 @@ public class Parser
     return new String[]
     {
   "end of file", "error", "invalid token", "INTEGER", "REAL", "BOOLEAN",
-  "IDENTIFIER", "'", "!", "'('", "')'", "$accept", "program", "element",
-  "literal", "list", "list_elements", null
+  "IDENTIFIER", "'\\''", "')'", "' '", "'\\n'", "'\\t'", "'('", "$accept",
+  "program", "element", "literal", "single_separator", "separator",
+  "optional_separator", "list", "list_elements", null
     };
   }
 
@@ -330,12 +341,12 @@ public class Parser
   private final class YYStack {
     private int[] stateStack = new int[16];
     private Location[] locStack = new Location[16];
-    private Object[] valueStack = new Object[16];
+    private lexems.IElement[] valueStack = new lexems.IElement[16];
 
     public int size = 16;
     public int height = -1;
 
-    public final void push (int state, Object value, Location loc) {
+    public final void push (int state, lexems.IElement value, Location loc) {
       height++;
       if (size == height)
         {
@@ -346,7 +357,7 @@ public class Parser
           System.arraycopy (locStack, 0, newLocStack, 0, height);
           locStack = newLocStack;
 
-          Object[] newValueStack = new Object[size * 2];
+          lexems.IElement[] newValueStack = new lexems.IElement[size * 2];
           System.arraycopy (valueStack, 0, newValueStack, 0, height);
           valueStack = newValueStack;
 
@@ -380,7 +391,7 @@ public class Parser
       return locStack[height - i];
     }
 
-    public final Object valueAt (int i) {
+    public final lexems.IElement valueAt (int i) {
       return valueStack[height - i];
     }
 
@@ -456,7 +467,7 @@ public class Parser
     Location yylloc = new Location (null, null);
 
     /* Semantic value of the lookahead.  */
-    Object yylval = null;
+    lexems.IElement yylval = null;
 
   /**
    * Whether error recovery is being done.  In this state, the parser
@@ -489,7 +500,7 @@ public class Parser
        Otherwise, the following line sets YYVAL to garbage.
        This behavior is undocumented and Bison
        users should not rely upon it.  */
-    Object yyval = (0 < yylen) ? yystack.valueAt(yylen - 1) : yystack.valueAt(0);
+    lexems.IElement yyval = (0 < yylen) ? yystack.valueAt(yylen - 1) : yystack.valueAt(0);
     Location yyloc = yylloc(yystack, yylen);
 
     yyReducePrint(yyn, yystack);
@@ -503,57 +514,57 @@ public class Parser
   break;
 
 
-  case 3: /* program: program element  */
+  case 3: /* program: list_elements  */
   if (yyn == 3)
     /* "src/parser.y":51  */
-                  { ast.add(((lexems.IElement)(yystack.valueAt (0)))); };
+                { ast = ((lexems.ElementsList)(yystack.valueAt (0))); };
   break;
 
 
-  case 7: /* element: "'" element  */
+  case 7: /* element: '\'' element  */
   if (yyn == 7)
     /* "src/parser.y":58  */
                { yyval = new lexems.ElementsList(new lexems.Identifier("quote"), ((lexems.IElement)(yystack.valueAt (0)))); };
   break;
 
 
-  case 8: /* element: error element  */
+  case 8: /* element: error ')'  */
   if (yyn == 8)
     /* "src/parser.y":59  */
-                { yyval = 1; System.out.println(1); return YYERROR; };
+            { return YYERROR; };
   break;
 
 
-  case 9: /* element: "!"  */
-  if (yyn == 9)
-    /* "src/parser.y":60  */
-                { yyval = 1; return ERROR; };
-  break;
-
-
-  case 13: /* list: '(' list_elements ')'  */
-  if (yyn == 13)
-    /* "src/parser.y":70  */
-                        { yyval = ((lexems.ElementsList)(yystack.valueAt (1))); };
-  break;
-
-
-  case 14: /* list_elements: %empty  */
-  if (yyn == 14)
-    /* "src/parser.y":72  */
-                        { yyval = new lexems.ElementsList(); };
-  break;
-
-
-  case 15: /* list_elements: list_elements element  */
-  if (yyn == 15)
+  case 19: /* list: '(' optional_separator ')'  */
+  if (yyn == 19)
     /* "src/parser.y":73  */
-                        { ((lexems.ElementsList)(yystack.valueAt (1))).add(((lexems.IElement)(yystack.valueAt (0)))); yyval = ((lexems.ElementsList)(yystack.valueAt (1))); };
+                                                              { yyval = new lexems.ElementsList(); };
+  break;
+
+
+  case 20: /* list: '(' optional_separator list_elements optional_separator ')'  */
+  if (yyn == 20)
+    /* "src/parser.y":74  */
+                                                              { yyval = ((lexems.ElementsList)(yystack.valueAt (2))); };
+  break;
+
+
+  case 21: /* list_elements: element  */
+  if (yyn == 21)
+    /* "src/parser.y":78  */
+                                  { yyval = new lexems.ElementsList(((lexems.IElement)(yystack.valueAt (0)))); };
+  break;
+
+
+  case 22: /* list_elements: list_elements separator element  */
+  if (yyn == 22)
+    /* "src/parser.y":79  */
+                                  { ((lexems.ElementsList)(yystack.valueAt (2))).add(((lexems.IElement)(yystack.valueAt (0)))); yyval = ((lexems.ElementsList)(yystack.valueAt (2))); };
   break;
 
 
 
-/* "src/Parser.java":557  */
+/* "src/Parser.java":568  */
 
         default: break;
       }
@@ -574,7 +585,7 @@ public class Parser
   `--------------------------------*/
 
   private void yySymbolPrint(String s, SymbolKind yykind,
-                             Object yyvalue, Location yylocation) {
+                             lexems.IElement yyvalue, Location yylocation) {
       if (0 < yydebug) {
           yycdebug(s
                    + (yykind.getCode() < YYNTOKENS_ ? " token " : " nterm ")
@@ -595,7 +606,7 @@ public class Parser
    *
    * @return <tt>YYACCEPT, YYABORT, YYPUSH_MORE</tt>
    */
-  public int push_parse(int yylextoken, Object yylexval, Location yylexloc) throws java.io.IOException
+  public int push_parse(int yylextoken, lexems.IElement yylexval, Location yylexloc) throws java.io.IOException
   {
     /* @$.  */
     Location yyloc;
@@ -880,7 +891,7 @@ public class Parser
    *
    * @return <tt>YYACCEPT, YYABORT, YYPUSH_MORE</tt>
    */
-  public int push_parse(int yylextoken, Object yylexval, Position yylexpos) throws java.io.IOException {
+  public int push_parse(int yylextoken, lexems.IElement yylexval, Position yylexpos) throws java.io.IOException {
       return push_parse(yylextoken, yylexval, new Location(yylexpos));
   }
 
@@ -997,8 +1008,8 @@ public class Parser
     return yyvalue == yytable_ninf_;
   }
 
-  private static final byte yypact_ninf_ = -4;
-  private static final byte yytable_ninf_ = -1;
+  private static final byte yypact_ninf_ = -12;
+  private static final byte yytable_ninf_ = -19;
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
@@ -1007,8 +1018,9 @@ public class Parser
   {
     return new byte[]
     {
-      -4,     3,    -4,    23,    -4,    -4,    -4,    -4,    23,    -4,
-      -4,    -4,    -4,    -4,    -4,    -4,    13,    -4,    -4
+       5,     7,   -12,   -12,   -12,   -12,    39,    -7,    13,   -12,
+     -12,   -12,    -7,   -12,   -12,   -12,   -12,   -12,    -7,   -12,
+      19,   -12,    39,   -12,   -12,    -7,   -12,    29,    10,   -12
     };
   }
 
@@ -1020,8 +1032,9 @@ public class Parser
   {
     return new byte[]
     {
-       2,     0,     1,     0,    10,    11,    12,     4,     0,     9,
-      14,     3,     5,     6,     8,     7,     0,    13,    15
+       0,     0,     9,    10,    11,     4,     0,    17,     0,    21,
+       5,     6,     3,     8,     7,    12,    13,    14,    15,    18,
+       0,     1,     0,    16,    19,    17,    22,     0,     0,    20
     };
   }
 
@@ -1031,7 +1044,7 @@ public class Parser
   {
     return new byte[]
     {
-      -4,    -4,    -3,    -4,    -4,    -4
+     -12,   -12,    -6,   -12,   -12,   -11,     3,   -12,    -1
     };
   }
 
@@ -1041,7 +1054,7 @@ public class Parser
   {
     return new byte[]
     {
-      -1,     1,    11,    12,    13,    16
+      -1,     8,     9,    10,    18,    19,    20,    11,    12
     };
   }
 
@@ -1053,10 +1066,12 @@ public class Parser
   {
     return new byte[]
     {
-      14,     0,     0,     2,     3,    15,     4,     5,     6,     7,
-       8,     9,    10,    18,     3,     0,     4,     5,     6,     7,
-       8,     9,    10,    17,     3,     0,     4,     5,     6,     7,
-       8,     9,    10
+      14,    22,    15,    16,    17,    -2,     1,    23,     2,     3,
+       4,     5,     6,    21,    27,    13,    26,     7,    29,    25,
+       1,    26,     2,     3,     4,     5,     6,    24,    28,     0,
+       1,     7,     2,     3,     4,     5,     6,   -18,     0,     0,
+       1,     7,     2,     3,     4,     5,     6,     0,     0,     0,
+       0,     7
     };
   }
 
@@ -1065,10 +1080,12 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       3,    -1,    -1,     0,     1,     8,     3,     4,     5,     6,
-       7,     8,     9,    16,     1,    -1,     3,     4,     5,     6,
-       7,     8,     9,    10,     1,    -1,     3,     4,     5,     6,
-       7,     8,     9
+       6,    12,     9,    10,    11,     0,     1,    18,     3,     4,
+       5,     6,     7,     0,    25,     8,    22,    12,     8,    20,
+       1,    27,     3,     4,     5,     6,     7,     8,    25,    -1,
+       1,    12,     3,     4,     5,     6,     7,     8,    -1,    -1,
+       1,    12,     3,     4,     5,     6,     7,    -1,    -1,    -1,
+      -1,    12
     };
   }
 
@@ -1079,8 +1096,9 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    12,     0,     1,     3,     4,     5,     6,     7,     8,
-       9,    13,    14,    15,    13,    13,    16,    10,    13
+       0,     1,     3,     4,     5,     6,     7,    12,    14,    15,
+      16,    20,    21,     8,    15,     9,    10,    11,    17,    18,
+      19,     0,    18,    18,     8,    21,    15,    18,    19,     8
     };
   }
 
@@ -1090,8 +1108,9 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    11,    12,    12,    13,    13,    13,    13,    13,    13,
-      14,    14,    14,    15,    16,    16
+       0,    13,    14,    14,    15,    15,    15,    15,    15,    16,
+      16,    16,    17,    17,    17,    18,    18,    19,    19,    20,
+      20,    21,    21
     };
   }
 
@@ -1101,8 +1120,9 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,     2,     0,     2,     1,     1,     1,     2,     2,     1,
-       1,     1,     1,     3,     0,     2
+       0,     2,     0,     1,     1,     1,     1,     2,     2,     1,
+       1,     1,     1,     1,     1,     1,     2,     0,     1,     3,
+       5,     1,     3
     };
   }
 
@@ -1114,8 +1134,9 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    50,    50,    51,    55,    56,    57,    58,    59,    60,
-      64,    65,    66,    70,    72,    73
+       0,    50,    50,    51,    55,    56,    57,    58,    59,    63,
+      64,    65,    68,    68,    68,    69,    69,    70,    70,    73,
+      74,    78,    79
     };
   }
 
@@ -1145,7 +1166,7 @@ private static final byte[] yycheck_ = yycheck_init();
   private static final SymbolKind yytranslate_(int t)
   {
     // Last valid token kind.
-    int code_max = 263;
+    int code_max = 261;
     if (t <= 0)
       return SymbolKind.S_YYEOF;
     else if (t <= code_max)
@@ -1158,11 +1179,11 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       0,     2,     2,     2,     2,     2,     2,     2,     2,    11,
+      10,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       9,    10,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     9,     2,     2,     2,     2,     2,     2,     7,
+      12,     8,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1184,15 +1205,15 @@ private static final byte[] yycheck_ = yycheck_init();
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8
+       5,     6
     };
   }
 
 
-  private static final int YYLAST_ = 32;
+  private static final int YYLAST_ = 51;
   private static final int YYEMPTY_ = -2;
-  private static final int YYFINAL_ = 2;
-  private static final int YYNTOKENS_ = 11;
+  private static final int YYFINAL_ = 21;
+  private static final int YYNTOKENS_ = 13;
 
 /* Unqualified %code blocks.  */
 /* "src/parser.y":17  */
@@ -1215,8 +1236,8 @@ private static final byte[] yycheck_ = yycheck_init();
         return ast;
     }
 
-/* "src/Parser.java":1219  */
+/* "src/Parser.java":1240  */
 
 }
-/* "src/parser.y":75  */
+/* "src/parser.y":81  */
 

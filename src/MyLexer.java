@@ -52,8 +52,10 @@ class MyLexer implements Parser.Lexer {
             System.err.print((i == 0 ? ": expected " : " or ") + arg[i].getName());
         }
         Parser.SymbolKind lookahead = ctx.getToken();
-        if (lookahead != null && lookahead.getCode() != YYUNDEF ) {
+        if (lookahead != null && lookahead != Parser.SymbolKind.S_YYUNDEF) {
             System.err.print(" before " + lookahead.getName());
+        } else {
+            System.err.print(", got invalid token " + getValue() + " instead");
         }
         System.err.println();
     }
