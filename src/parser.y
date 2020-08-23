@@ -10,6 +10,8 @@
 
 %locations
 
+%locations
+
 %code imports {
 import java.io.IOException;
 }
