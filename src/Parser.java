@@ -39,7 +39,7 @@
 
 import java.text.MessageFormat;
 /* "%code imports" blocks.  */
-/* "src/parser.y":9  */
+/* "src/parser.y":11  */
 
 import java.io.IOException;
 
@@ -79,6 +79,62 @@ public class Parser
 
 
 
+  /**
+   * A class defining a pair of positions.  Positions, defined by the
+   * <code>Position</code> class, denote a point in the input.
+   * Locations represent a part of the input through the beginning
+   * and ending positions.
+   */
+  public static class Location {
+    /**
+     * The first, inclusive, position in the range.
+     */
+    public Position begin;
+
+    /**
+     * The first position beyond the range.
+     */
+    public Position end;
+
+    /**
+     * Create a <code>Location</code> denoting an empty range located at
+     * a given point.
+     * @param loc The position at which the range is anchored.
+     */
+    public Location (Position loc) {
+      this.begin = this.end = loc;
+    }
+
+    /**
+     * Create a <code>Location</code> from the endpoints of the range.
+     * @param begin The first position included in the range.
+     * @param end   The first position beyond the range.
+     */
+    public Location (Position begin, Position end) {
+      this.begin = begin;
+      this.end = end;
+    }
+
+    /**
+     * Print a representation of the location.  For this to be correct,
+     * <code>Position</code> should override the <code>equals</code>
+     * method.
+     */
+    public String toString () {
+      if (begin.equals (end))
+        return begin.toString ();
+      else
+        return begin.toString () + "-" + end.toString ();
+    }
+  }
+
+  private Location yylloc(YYStack rhs, int n)
+  {
+    if (0 < n)
+      return new Location(rhs.locationAt(n-1).begin, rhs.locationAt(0).end);
+    else
+      return new Location(rhs.locationAt(0).end);
+  }
 
   public enum SymbolKind
   {
@@ -210,6 +266,17 @@ public class Parser
     /** Deprecated, use YYEOF instead.  */
     public static final int EOF = YYEOF;
 
+    /**
+     * Method to retrieve the beginning position of the last scanned token.
+     * @return the position at which the last scanned token starts.
+     */
+    Position getStartPos();
+
+    /**
+     * Method to retrieve the ending position of the last scanned token.
+     * @return the first position beyond the last scanned token.
+     */
+    Position getEndPos();
 
     /**
      * Method to retrieve the semantic value of the last scanned token.
@@ -220,18 +287,19 @@ public class Parser
     /**
      * Entry point for the scanner.  Returns the token identifier corresponding
      * to the next token and prepares to return the semantic value
-     * of the token.
+     * and beginning/ending positions of the token.
      * @return the token identifier corresponding to the next token.
      */
     int yylex() throws java.io.IOException;
 
     /**
-     * Emit an errorin a user-defined way.
+     * Emit an error referring to the given locationin a user-defined way.
      *
-     *
+     * @param loc The location of the element to which the
+     *                error message is related.
      * @param msg The string for the error message.
      */
-     void yyerror(String msg);
+     void yyerror(Location loc, String msg);
 
 
   }
@@ -268,29 +336,50 @@ public class Parser
 
   /**
    * Print an error message via the lexer.
-   *
+   * Use a <code>null</code> location.
    * @param msg The error message.
    */
   public final void yyerror(String msg) {
-      yylexer.yyerror(msg);
+      yylexer.yyerror((Location)null, msg);
   }
 
+  /**
+   * Print an error message via the lexer.
+   * @param loc The location associated with the message.
+   * @param msg The error message.
+   */
+  public final void yyerror(Location loc, String msg) {
+      yylexer.yyerror(loc, msg);
+  }
+
+  /**
+   * Print an error message via the lexer.
+   * @param pos The position associated with the message.
+   * @param msg The error message.
+   */
+  public final void yyerror(Position pos, String msg) {
+      yylexer.yyerror(new Location (pos), msg);
+  }
 
 
   private final class YYStack {
     private int[] stateStack = new int[16];
+    private Location[] locStack = new Location[16];
     private lexems.IElement[] valueStack = new lexems.IElement[16];
 
     public int size = 16;
     public int height = -1;
 
-    public final void push (int state, lexems.IElement value) {
+    public final void push (int state, lexems.IElement value, Location loc) {
       height++;
       if (size == height)
         {
           int[] newStateStack = new int[size * 2];
           System.arraycopy (stateStack, 0, newStateStack, 0, height);
           stateStack = newStateStack;
+          Location[] newLocStack = new Location[size * 2];
+          System.arraycopy (locStack, 0, newLocStack, 0, height);
+          locStack = newLocStack;
 
           lexems.IElement[] newValueStack = new lexems.IElement[size * 2];
           System.arraycopy (valueStack, 0, newValueStack, 0, height);
@@ -300,6 +389,7 @@ public class Parser
         }
 
       stateStack[height] = state;
+      locStack[height] = loc;
       valueStack[height] = value;
     }
 
@@ -311,12 +401,18 @@ public class Parser
       // Avoid memory leaks... garbage collection is a white lie!
       if (0 < num) {
         java.util.Arrays.fill (valueStack, height - num + 1, height + 1, null);
+        java.util.Arrays.fill (locStack, height - num + 1, height + 1, null);
       }
       height -= num;
     }
 
     public final int stateAt (int i) {
       return stateStack[height - i];
+    }
+
+
+    public final Location locationAt (int i) {
+      return locStack[height - i];
     }
 
     public final lexems.IElement valueAt (int i) {
@@ -403,53 +499,54 @@ public class Parser
        This behavior is undocumented and Bison
        users should not rely upon it.  */
     lexems.IElement yyval = (0 < yylen) ? yystack.valueAt(yylen - 1) : yystack.valueAt(0);
+    Location yyloc = yylloc(yystack, yylen);
 
     switch (yyn)
       {
           case 2: /* program: %empty  */
   if (yyn == 2)
-    /* "src/parser.y":39  */
+    /* "src/parser.y":41  */
          { };
   break;
 
 
   case 3: /* program: program element  */
   if (yyn == 3)
-    /* "src/parser.y":40  */
+    /* "src/parser.y":42  */
                   { ast.add(((lexems.IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 7: /* element: '\'' element  */
   if (yyn == 7)
-    /* "src/parser.y":47  */
+    /* "src/parser.y":49  */
                { yyval = new lexems.ElementsList(new lexems.Identifier("quote"), ((lexems.IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 11: /* list: '(' list_elements ')'  */
   if (yyn == 11)
-    /* "src/parser.y":57  */
+    /* "src/parser.y":59  */
                         { yyval = ((lexems.ElementsList)(yystack.valueAt (1))); };
   break;
 
 
   case 12: /* list_elements: %empty  */
   if (yyn == 12)
-    /* "src/parser.y":59  */
+    /* "src/parser.y":61  */
                         { yyval = new lexems.ElementsList(); };
   break;
 
 
   case 13: /* list_elements: list_elements element  */
   if (yyn == 13)
-    /* "src/parser.y":60  */
+    /* "src/parser.y":62  */
                         { ((lexems.ElementsList)(yystack.valueAt (1))).add(((lexems.IElement)(yystack.valueAt (0)))); yyval = ((lexems.ElementsList)(yystack.valueAt (1))); };
   break;
 
 
 
-/* "src/Parser.java":453  */
+/* "src/Parser.java":550  */
 
         default: break;
       }
@@ -458,7 +555,7 @@ public class Parser
     yylen = 0;
     /* Shift the result of the reduction.  */
     int yystate = yyLRGotoState(yystack.stateAt(0), yyr1_[yyn]);
-    yystack.push(yystate, yyval);
+    yystack.push(yystate, yyval, yyloc);
     return YYNEWSTATE;
   }
 
@@ -475,6 +572,8 @@ public class Parser
   public boolean parse() throws java.io.IOException
 
   {
+    /* @$.  */
+    Location yyloc;
 
 
     /* Lookahead token kind.  */
@@ -490,6 +589,11 @@ public class Parser
     int label = YYNEWSTATE;
 
 
+    /* The location where the error started.  */
+    Location yyerrloc = null;
+
+    /* Location. */
+    Location yylloc = new Location (null, null);
 
     /* Semantic value of the lookahead.  */
     lexems.IElement yylval = null;
@@ -498,7 +602,7 @@ public class Parser
     yynerrs = 0;
 
     /* Initialize the stack.  */
-    yystack.push (yystate, yylval);
+    yystack.push (yystate, yylval, yylloc);
 
 
 
@@ -527,6 +631,8 @@ public class Parser
 
             yychar = yylexer.yylex ();
             yylval = yylexer.getLVal();
+            yylloc = new Location(yylexer.getStartPos(),
+                                          yylexer.getEndPos());
 
           }
 
@@ -541,6 +647,7 @@ public class Parser
             // loop in error recovery. */
             yychar = Lexer.YYUNDEF;
             yytoken = SymbolKind.S_YYUNDEF;
+            yyerrloc = yylloc;
             label = YYERRLAB1;
           }
         else
@@ -575,7 +682,7 @@ public class Parser
                   --yyerrstatus_;
 
                 yystate = yyn;
-                yystack.push (yystate, yylval);
+                yystack.push (yystate, yylval, yylloc);
                 label = YYNEWSTATE;
               }
           }
@@ -611,9 +718,10 @@ public class Parser
             ++yynerrs;
             if (yychar == YYEMPTY_)
               yytoken = null;
-            yyreportSyntaxError (new Context (yystack, yytoken));
+            yyreportSyntaxError (new Context (yystack, yytoken, yylloc));
           }
 
+        yyerrloc = yylloc;
         if (yyerrstatus_ == 3)
           {
             /* If just tried and failed to reuse lookahead token after an
@@ -638,6 +746,7 @@ public class Parser
       | errorlab -- error raised explicitly by YYERROR.  |
       `-------------------------------------------------*/
       case YYERROR:
+        yyerrloc = yystack.locationAt (yylen - 1);
         /* Do not reclaim the symbols of the rule which action triggered
            this YYERROR.  */
         yystack.pop (yylen);
@@ -674,6 +783,7 @@ public class Parser
               return false;
 
 
+            yyerrloc = yystack.locationAt (0);
             yystack.pop ();
             yystate = yystack.stateAt (0);
           }
@@ -683,11 +793,16 @@ public class Parser
           break;
 
 
+        /* Muck with the stack to setup for yylloc.  */
+        yystack.push (0, null, yylloc);
+        yystack.push (0, null, yyerrloc);
+        yyloc = yylloc (yystack, 2);
+        yystack.pop (2);
 
         /* Shift the error token.  */
 
         yystate = yyn;
-        yystack.push (yyn, yylval);
+        yystack.push (yyn, yylval, yyloc);
         label = YYNEWSTATE;
         break;
 
@@ -710,10 +825,11 @@ public class Parser
    */
   public static final class Context
   {
-    Context (YYStack stack, SymbolKind token)
+    Context (YYStack stack, SymbolKind token, Location loc)
     {
       yystack = stack;
       yytoken = token;
+      yylocation = loc;
     }
 
     private YYStack yystack;
@@ -728,6 +844,16 @@ public class Parser
     }
 
     private SymbolKind yytoken;
+
+    /**
+     * The location of the lookahead.
+     */
+    public final Location getLocation ()
+    {
+      return yylocation;
+    }
+
+    private Location yylocation;
     static final int NTOKENS = Parser.YYNTOKENS_;
 
     /**
@@ -838,9 +964,9 @@ public class Parser
               case 4: yyformat = "syntax error, unexpected {0}, expecting {1} or {2} or {3}"; break;
               case 5: yyformat = "syntax error, unexpected {0}, expecting {1} or {2} or {3} or {4}"; break;
           }
-          yyerror(new MessageFormat(yyformat).format(yystr));
+          yyerror(yyctx.yylocation, new MessageFormat(yyformat).format(yystr));
       } else {
-          yyerror("syntax error");
+          yyerror(yyctx.yylocation, "syntax error");
       }
   }
 
@@ -1028,7 +1154,7 @@ private static final byte[] yycheck_ = yycheck_init();
   private static final int YYNTOKENS_ = 10;
 
 /* Unqualified %code blocks.  */
-/* "src/parser.y":13  */
+/* "src/parser.y":15  */
 
     private static lexems.ElementsList ast;
     public static lexems.IElement makeAST() throws IOException {
@@ -1041,8 +1167,8 @@ private static final byte[] yycheck_ = yycheck_init();
         return ast;
     }
 
-/* "src/Parser.java":1045  */
+/* "src/Parser.java":1171  */
 
 }
-/* "src/parser.y":62  */
+/* "src/parser.y":64  */
 

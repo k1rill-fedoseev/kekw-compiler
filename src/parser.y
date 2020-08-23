@@ -6,6 +6,8 @@
 
 %define parse.error verbose
 
+%locations
+
 %code imports {
 import java.io.IOException;
 }

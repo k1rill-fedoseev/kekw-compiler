@@ -9,13 +9,19 @@ import java.util.regex.Pattern;
 class MyLexer implements Parser.Lexer {
     StreamTokenizer st;
 
+    Position start = new Position(1, 0);
+    Position end = new Position(1, 0);
+
+    PositionReader reader;
+
     private final Pattern integerPattern = Pattern.compile("[+\\-]?[0-9]+");
     private final Pattern realPattern = Pattern.compile("[+\\-]?[0-9]*\\.[0-9]+");
     private final Pattern boolPattern = Pattern.compile("(true|false)");
     private final Pattern identifierPattern = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 
     public MyLexer(InputStream is) {
-        st = new StreamTokenizer(new InputStreamReader(is));
+        reader = new PositionReader(new InputStreamReader(is));
+        st = new StreamTokenizer(reader);
         st.resetSyntax();
         st.whitespaceChars('\t', '\t');
         st.whitespaceChars('\n', '\n');
@@ -33,8 +39,21 @@ class MyLexer implements Parser.Lexer {
         st.ordinaryChar('\'');
     }
 
-    public void yyerror(String s) {
-        System.err.println(s);
+
+    public void yyerror(Parser.Location loc, String s){
+        System.err.println(String.format("%s at line %d, column %d", s, loc.begin.line, loc.begin.column));
+    }
+
+    public Position getStartPos() {
+        return new Position(start);
+    }
+
+    public Position getEndPos() {
+        return new Position(end);
+    }
+
+    public Parser.Location getLocation() {
+       return new Parser.Location(new Position(start), new Position(end));
     }
 
     IElement yylval;
@@ -44,8 +63,14 @@ class MyLexer implements Parser.Lexer {
     }
 
     public int yylex() throws IOException {
+        start.set(reader.getPosition());
         int ttype = st.nextToken();
+        end.set(reader.getPosition());
+
         switch (ttype) {
+            case StreamTokenizer.TT_EOL:
+                end.line += 1;
+                end.column = 0;
             case StreamTokenizer.TT_EOF:
                 return YYEOF;
             case StreamTokenizer.TT_WORD:
