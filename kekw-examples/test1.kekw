@@ -1,3 +1,4 @@
+# EXAMPLE FROM THE DESCRIPTION
 (setq x (plus 1 2)) # x gets the value of 3
 x # the value of 3
 'x # the atom x itself

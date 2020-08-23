@@ -1,0 +1,24 @@
+# TEST COND
+(setq a 1)
+(setq b 1)
+(cond (equal a b) (setq a 2) (setq b 2))
+a # 2
+(cond (equal a b) (setq a 2) (setq b 2))
+b # 2
+
+(cond (nonequal a b) (setq a 3)) # null
+(cond (lesseq a b) (setq a 3))
+a # 3
+
+(cond (greater a b) (setq b (plus a b)) (setq a (plus a b)))
+b # 5
+a # 3
+
+(setq a 5)
+(cond (greatereq a b) (setq a 3))
+a # 3
+
+(cond (greatereq a b) (setq a 3) (setq a 5))
+a # 5
+
+

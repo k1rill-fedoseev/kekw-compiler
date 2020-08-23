@@ -1,3 +1,4 @@
+# EXAMPLE FROM THE DESCRIPTION
 (setq x 5)
 x # value of 5
 (setq y (plus 1 2)) # atom y gets the value of 3

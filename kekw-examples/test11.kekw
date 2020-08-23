@@ -1,0 +1,46 @@
+# TEST LOGIC OPERATORS
+
+# TEST AND
+(setq x 0)
+(cond (and true true) (setq x 1) (setq x -1))
+x # 1
+
+(setq x 0)
+(cond (and false true) (setq x 1) (setq x -1))
+x # -1
+
+# TEST OR
+(setq x 0)
+(cond (or false true) (setq x 1) (setq x -1))
+x # 1
+
+(setq x 0)
+(cond (or false false) (setq x 1) (setq x -1))
+x # -1
+
+(setq x 0)
+(cond (or true true) (setq x 1) (setq x -1))
+x # 1
+
+# TEST XOR
+(setq x 0)
+(cond (xor true true) (setq x 1) (setq x -1))
+x # -1
+
+(setq x 0)
+(cond (xor true false) (setq x 1) (setq x -1))
+x # 1
+
+(setq x 0)
+(cond (xor false false) (setq x 1) (setq x -1))
+x # -1
+
+# TEST NOT
+(setq x 0)
+(cond (not false) (setq x 1) (setq x -1))
+x # 1
+
+(setq x 0)
+(cond (not true) (setq x 1) (setq x -1))
+x # -1
+

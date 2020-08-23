@@ -1,0 +1,9 @@
+# TEST EVAL
+(eval 5) # 5
+
+(setq x 5)
+(eval x) # 5
+
+(eval '(plus 1 2)) # 3
+
+(eval (plus 1 2)) # 3
