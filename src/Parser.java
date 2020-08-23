@@ -39,7 +39,7 @@
 
 import java.text.MessageFormat;
 /* "%code imports" blocks.  */
-/* "src/parser.y":13  */
+/* "src/parser.y":15  */
 
 import java.io.IOException;
 
@@ -509,56 +509,56 @@ public class Parser
       {
           case 2: /* program: %empty  */
   if (yyn == 2)
-    /* "src/parser.y":50  */
+    /* "src/parser.y":52  */
          { };
   break;
 
 
   case 3: /* program: list_elements  */
   if (yyn == 3)
-    /* "src/parser.y":51  */
+    /* "src/parser.y":53  */
                 { ast = ((lexems.ElementsList)(yystack.valueAt (0))); };
   break;
 
 
   case 7: /* element: '\'' element  */
   if (yyn == 7)
-    /* "src/parser.y":58  */
+    /* "src/parser.y":60  */
                { yyval = new lexems.ElementsList(new lexems.Identifier("quote"), ((lexems.IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 8: /* element: error ')'  */
   if (yyn == 8)
-    /* "src/parser.y":59  */
+    /* "src/parser.y":61  */
             { return YYERROR; };
   break;
 
 
   case 19: /* list: '(' optional_separator ')'  */
   if (yyn == 19)
-    /* "src/parser.y":73  */
+    /* "src/parser.y":75  */
                                                               { yyval = new lexems.ElementsList(); };
   break;
 
 
   case 20: /* list: '(' optional_separator list_elements optional_separator ')'  */
   if (yyn == 20)
-    /* "src/parser.y":74  */
+    /* "src/parser.y":76  */
                                                               { yyval = ((lexems.ElementsList)(yystack.valueAt (2))); };
   break;
 
 
   case 21: /* list_elements: element  */
   if (yyn == 21)
-    /* "src/parser.y":78  */
+    /* "src/parser.y":80  */
                                   { yyval = new lexems.ElementsList(((lexems.IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 22: /* list_elements: list_elements separator element  */
   if (yyn == 22)
-    /* "src/parser.y":79  */
+    /* "src/parser.y":81  */
                                   { ((lexems.ElementsList)(yystack.valueAt (2))).add(((lexems.IElement)(yystack.valueAt (0)))); yyval = ((lexems.ElementsList)(yystack.valueAt (2))); };
   break;
 
@@ -1134,9 +1134,9 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    50,    50,    51,    55,    56,    57,    58,    59,    63,
-      64,    65,    68,    68,    68,    69,    69,    70,    70,    73,
-      74,    78,    79
+       0,    52,    52,    53,    57,    58,    59,    60,    61,    65,
+      66,    67,    70,    70,    70,    71,    71,    72,    72,    75,
+      76,    80,    81
     };
   }
 
@@ -1216,7 +1216,7 @@ private static final byte[] yycheck_ = yycheck_init();
   private static final int YYNTOKENS_ = 13;
 
 /* Unqualified %code blocks.  */
-/* "src/parser.y":17  */
+/* "src/parser.y":19  */
 
     private static lexems.ElementsList ast;
     public static lexems.IElement makeAST() throws IOException {
@@ -1239,5 +1239,5 @@ private static final byte[] yycheck_ = yycheck_init();
 /* "src/Parser.java":1240  */
 
 }
-/* "src/parser.y":81  */
+/* "src/parser.y":83  */
 
