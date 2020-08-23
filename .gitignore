@@ -1,48 +1,7 @@
-## VIM ##
+**.log
+.idea/
+.vscode/
+out/
 *.sw[op]
-
-## RopeProject ##
-.ropeproject/
-
-## Python Cache ##
-*.py[cod]
-__pycache__/
-
-## Application ##
-/django/static/
-/django/media/
-
 .env
-
 .DS_Store
-/dist
-/pipelines
-
-# Virtual env
-/venv
-
-# Local env files
-.env.local
-.env.*.local
-
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-*.iml
-
-# Docker
-docker-compose.yaml
-docker-compose.override.yaml
-
-# Celery storage for periodic tasks
-celerybeat-schedule
