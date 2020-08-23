@@ -34,19 +34,21 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
+package parser;
 
 
 
 import java.text.MessageFormat;
 /* "%code imports" blocks.  */
-/* "src/parser.y":15  */
+/* "src/parser/parser.y":14  */
 
 import java.io.IOException;
+import lexems.*;
 
-/* "src/Parser.java":47  */
+/* "src/parser/Parser.java":49  */
 
 /**
- * A Bison parser, automatically generated from <tt>src/parser.y</tt>.
+ * A Bison parser, automatically generated from <tt>src/parser/parser.y</tt>.
  *
  * @author LALR (1) parser skeleton written by Paolo Bonzini.
  */
@@ -341,12 +343,12 @@ public class Parser
   private final class YYStack {
     private int[] stateStack = new int[16];
     private Location[] locStack = new Location[16];
-    private lexems.IElement[] valueStack = new lexems.IElement[16];
+    private IElement[] valueStack = new IElement[16];
 
     public int size = 16;
     public int height = -1;
 
-    public final void push (int state, lexems.IElement value, Location loc) {
+    public final void push (int state, IElement value, Location loc) {
       height++;
       if (size == height)
         {
@@ -357,7 +359,7 @@ public class Parser
           System.arraycopy (locStack, 0, newLocStack, 0, height);
           locStack = newLocStack;
 
-          lexems.IElement[] newValueStack = new lexems.IElement[size * 2];
+          IElement[] newValueStack = new IElement[size * 2];
           System.arraycopy (valueStack, 0, newValueStack, 0, height);
           valueStack = newValueStack;
 
@@ -391,7 +393,7 @@ public class Parser
       return locStack[height - i];
     }
 
-    public final lexems.IElement valueAt (int i) {
+    public final IElement valueAt (int i) {
       return valueStack[height - i];
     }
 
@@ -467,7 +469,7 @@ public class Parser
     Location yylloc = new Location (null, null);
 
     /* Semantic value of the lookahead.  */
-    lexems.IElement yylval = null;
+    IElement yylval = null;
 
   /**
    * Whether error recovery is being done.  In this state, the parser
@@ -500,71 +502,71 @@ public class Parser
        Otherwise, the following line sets YYVAL to garbage.
        This behavior is undocumented and Bison
        users should not rely upon it.  */
-    lexems.IElement yyval = (0 < yylen) ? yystack.valueAt(yylen - 1) : yystack.valueAt(0);
+    IElement yyval = (0 < yylen) ? yystack.valueAt(yylen - 1) : yystack.valueAt(0);
     Location yyloc = yylloc(yystack, yylen);
 
     yyReducePrint(yyn, yystack);
 
     switch (yyn)
       {
-          case 2: /* program: %empty  */
+          case 2: /* program: optional_separator  */
   if (yyn == 2)
-    /* "src/parser.y":52  */
-         { };
+    /* "src/parser/parser.y":52  */
+                     { };
   break;
 
 
-  case 3: /* program: list_elements  */
+  case 3: /* program: optional_separator list_elements optional_separator  */
   if (yyn == 3)
-    /* "src/parser.y":53  */
-                { ast = ((lexems.ElementsList)(yystack.valueAt (0))); };
+    /* "src/parser/parser.y":53  */
+                                                      { ast = ((ElementsList)(yystack.valueAt (1))); };
   break;
 
 
   case 7: /* element: '\'' element  */
   if (yyn == 7)
-    /* "src/parser.y":60  */
-               { yyval = new lexems.ElementsList(new lexems.Identifier("quote"), ((lexems.IElement)(yystack.valueAt (0)))); };
+    /* "src/parser/parser.y":60  */
+               { yyval = new ElementsList(new Identifier("quote"), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 8: /* element: error ')'  */
   if (yyn == 8)
-    /* "src/parser.y":61  */
+    /* "src/parser/parser.y":61  */
             { return YYERROR; };
   break;
 
 
   case 19: /* list: '(' optional_separator ')'  */
   if (yyn == 19)
-    /* "src/parser.y":75  */
-                                                              { yyval = new lexems.ElementsList(); };
+    /* "src/parser/parser.y":75  */
+                                                              { yyval = new ElementsList(); };
   break;
 
 
   case 20: /* list: '(' optional_separator list_elements optional_separator ')'  */
   if (yyn == 20)
-    /* "src/parser.y":76  */
-                                                              { yyval = ((lexems.ElementsList)(yystack.valueAt (2))); };
+    /* "src/parser/parser.y":76  */
+                                                              { yyval = ((ElementsList)(yystack.valueAt (2))); };
   break;
 
 
   case 21: /* list_elements: element  */
   if (yyn == 21)
-    /* "src/parser.y":80  */
-                                  { yyval = new lexems.ElementsList(((lexems.IElement)(yystack.valueAt (0)))); };
+    /* "src/parser/parser.y":80  */
+                                  { yyval = new ElementsList(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 22: /* list_elements: list_elements separator element  */
   if (yyn == 22)
-    /* "src/parser.y":81  */
-                                  { ((lexems.ElementsList)(yystack.valueAt (2))).add(((lexems.IElement)(yystack.valueAt (0)))); yyval = ((lexems.ElementsList)(yystack.valueAt (2))); };
+    /* "src/parser/parser.y":81  */
+                                  { ((ElementsList)(yystack.valueAt (2))).add(((IElement)(yystack.valueAt (0)))); yyval = ((ElementsList)(yystack.valueAt (2))); };
   break;
 
 
 
-/* "src/Parser.java":568  */
+/* "src/parser/Parser.java":570  */
 
         default: break;
       }
@@ -585,7 +587,7 @@ public class Parser
   `--------------------------------*/
 
   private void yySymbolPrint(String s, SymbolKind yykind,
-                             lexems.IElement yyvalue, Location yylocation) {
+                             IElement yyvalue, Location yylocation) {
       if (0 < yydebug) {
           yycdebug(s
                    + (yykind.getCode() < YYNTOKENS_ ? " token " : " nterm ")
@@ -606,7 +608,7 @@ public class Parser
    *
    * @return <tt>YYACCEPT, YYABORT, YYPUSH_MORE</tt>
    */
-  public int push_parse(int yylextoken, lexems.IElement yylexval, Location yylexloc) throws java.io.IOException
+  public int push_parse(int yylextoken, IElement yylexval, Location yylexloc) throws java.io.IOException
   {
     /* @$.  */
     Location yyloc;
@@ -891,7 +893,7 @@ public class Parser
    *
    * @return <tt>YYACCEPT, YYABORT, YYPUSH_MORE</tt>
    */
-  public int push_parse(int yylextoken, lexems.IElement yylexval, Position yylexpos) throws java.io.IOException {
+  public int push_parse(int yylextoken, IElement yylexval, Position yylexpos) throws java.io.IOException {
       return push_parse(yylextoken, yylexval, new Location(yylexpos));
   }
 
@@ -1008,7 +1010,7 @@ public class Parser
     return yyvalue == yytable_ninf_;
   }
 
-  private static final byte yypact_ninf_ = -12;
+  private static final byte yypact_ninf_ = -13;
   private static final byte yytable_ninf_ = -19;
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -1018,9 +1020,10 @@ public class Parser
   {
     return new byte[]
     {
-       5,     7,   -12,   -12,   -12,   -12,    39,    -7,    13,   -12,
-     -12,   -12,    -7,   -12,   -12,   -12,   -12,   -12,    -7,   -12,
-      19,   -12,    39,   -12,   -12,    -7,   -12,    29,    10,   -12
+       7,   -13,   -13,   -13,    10,     7,   -13,    20,   -13,   -13,
+       3,   -13,   -13,   -13,   -13,    40,     7,   -13,   -13,   -13,
+       7,   -13,   -13,    30,     1,   -13,   -13,     7,   -13,     6,
+     -13
     };
   }
 
@@ -1032,9 +1035,10 @@ public class Parser
   {
     return new byte[]
     {
-       0,     0,     9,    10,    11,     4,     0,    17,     0,    21,
-       5,     6,     3,     8,     7,    12,    13,    14,    15,    18,
-       0,     1,     0,    16,    19,    17,    22,     0,     0,    20
+      17,    12,    13,    14,     0,    15,    18,     0,     1,    16,
+       0,     9,    10,    11,     4,     0,    17,    21,     5,     6,
+      17,     8,     7,     0,     0,     3,    19,    17,    22,     0,
+      20
     };
   }
 
@@ -1044,7 +1048,7 @@ public class Parser
   {
     return new byte[]
     {
-     -12,   -12,    -6,   -12,   -12,   -11,     3,   -12,    -1
+     -13,   -13,   -12,   -13,   -13,    -5,    33,   -13,    -4
     };
   }
 
@@ -1054,7 +1058,7 @@ public class Parser
   {
     return new byte[]
     {
-      -1,     8,     9,    10,    18,    19,    20,    11,    12
+      -1,     4,    17,    18,     5,     6,     7,    19,    20
     };
   }
 
@@ -1066,12 +1070,13 @@ public class Parser
   {
     return new byte[]
     {
-      14,    22,    15,    16,    17,    -2,     1,    23,     2,     3,
-       4,     5,     6,    21,    27,    13,    26,     7,    29,    25,
-       1,    26,     2,     3,     4,     5,     6,    24,    28,     0,
-       1,     7,     2,     3,     4,     5,     6,   -18,     0,     0,
-       1,     7,     2,     3,     4,     5,     6,     0,     0,     0,
-       0,     7
+       9,   -18,    10,    22,    11,    12,    13,    14,    15,   -18,
+       8,    21,    28,    16,    30,    24,     1,     2,     3,    27,
+      -2,    10,    24,    11,    12,    13,    14,    15,     0,     0,
+       0,    10,    16,    11,    12,    13,    14,    15,    26,     0,
+       0,    10,    16,    11,    12,    13,    14,    15,     0,    23,
+       0,     0,    16,    25,     0,     0,     0,     0,     0,     0,
+      29
     };
   }
 
@@ -1080,12 +1085,13 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       6,    12,     9,    10,    11,     0,     1,    18,     3,     4,
-       5,     6,     7,     0,    25,     8,    22,    12,     8,    20,
-       1,    27,     3,     4,     5,     6,     7,     8,    25,    -1,
-       1,    12,     3,     4,     5,     6,     7,     8,    -1,    -1,
-       1,    12,     3,     4,     5,     6,     7,    -1,    -1,    -1,
-      -1,    12
+       5,     0,     1,    15,     3,     4,     5,     6,     7,     8,
+       0,     8,    24,    12,     8,    20,     9,    10,    11,    23,
+       0,     1,    27,     3,     4,     5,     6,     7,    -1,    -1,
+      -1,     1,    12,     3,     4,     5,     6,     7,     8,    -1,
+      -1,     1,    12,     3,     4,     5,     6,     7,    -1,    16,
+      -1,    -1,    12,    20,    -1,    -1,    -1,    -1,    -1,    -1,
+      27
     };
   }
 
@@ -1096,9 +1102,10 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,     1,     3,     4,     5,     6,     7,    12,    14,    15,
-      16,    20,    21,     8,    15,     9,    10,    11,    17,    18,
-      19,     0,    18,    18,     8,    21,    15,    18,    19,     8
+       0,     9,    10,    11,    14,    17,    18,    19,     0,    18,
+       1,     3,     4,     5,     6,     7,    12,    15,    16,    20,
+      21,     8,    15,    19,    18,    19,     8,    21,    15,    19,
+       8
     };
   }
 
@@ -1120,7 +1127,7 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,     2,     0,     1,     1,     1,     1,     2,     2,     1,
+       0,     2,     1,     3,     1,     1,     1,     2,     2,     1,
        1,     1,     1,     1,     1,     1,     2,     0,     1,     3,
        5,     1,     3
     };
@@ -1210,23 +1217,23 @@ private static final byte[] yycheck_ = yycheck_init();
   }
 
 
-  private static final int YYLAST_ = 51;
+  private static final int YYLAST_ = 60;
   private static final int YYEMPTY_ = -2;
-  private static final int YYFINAL_ = 21;
+  private static final int YYFINAL_ = 8;
   private static final int YYNTOKENS_ = 13;
 
 /* Unqualified %code blocks.  */
-/* "src/parser.y":19  */
+/* "src/parser/parser.y":19  */
 
-    private static lexems.ElementsList ast;
-    public static lexems.IElement makeAST() throws IOException {
-        ast = new lexems.ElementsList();
+    private static ElementsList ast;
+    public static ElementsList makeAST() throws IOException {
+        ast = new ElementsList();
         MyLexer l = new MyLexer(System.in);
-        Parser p = new Parser(l);
+        Parser p = new parser.Parser(l);
         int status;
         do {
             int token = l.getToken();
-            lexems.IElement lval = l.getValue();
+            IElement lval = l.getValue();
             Parser.Location yyloc = l.getLocation();
             status = p.push_parse(token, lval, yyloc);
         } while (status == Parser.YYPUSH_MORE);
@@ -1236,8 +1243,8 @@ private static final byte[] yycheck_ = yycheck_init();
         return ast;
     }
 
-/* "src/Parser.java":1240  */
+/* "src/parser/Parser.java":1247  */
 
 }
-/* "src/parser.y":83  */
+/* "src/parser/parser.y":83  */
 

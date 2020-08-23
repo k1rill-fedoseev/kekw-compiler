@@ -17,10 +17,7 @@ public class ElementsList extends LinkedList<IElement> implements IElement {
         add(elem2);
     }
 
-    @Override
-    public Object evaluate() {
-        return null;
-    }
+    public Object evaluate() { return null; }
 
     @Override
     public String toString() {

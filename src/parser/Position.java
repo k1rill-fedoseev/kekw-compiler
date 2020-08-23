@@ -1,3 +1,5 @@
+package parser;
+
 /**
  * A class defining a point in the input.
  */

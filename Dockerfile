@@ -12,7 +12,7 @@ RUN cd bison-3.7.1 && ./configure && make && make install
 
 COPY src src
 
-RUN /usr/local/bin/bison -o src/Parser.java src/parser.y
+RUN /usr/local/bin/bison -o src/parser/Parser.java src/parser/parser.y
 
 RUN javac -d out $(find src -name *.java)
 
@@ -26,4 +26,4 @@ COPY --from=builder /kekw/out ./out
 
 ENTRYPOINT ["java", "-cp", "out"]
 
-CMD ["Interpreter"]
+CMD ["interpreter.Interpreter"]

@@ -1,14 +1,16 @@
+package parser;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
 /**
- * A Stream reader that keeps track of the current Position.
+ * A Stream reader that keeps track of the current parser.Position.
  */
 public class PositionReader extends BufferedReader {
 
     private final Position position = new Position();
-    // Position before the latest call to "read", i.e. position
+    // parser.Position before the latest call to "read", i.e. position
     // of the last character of the current token.
     private final Position previousPosition = new Position();
 
