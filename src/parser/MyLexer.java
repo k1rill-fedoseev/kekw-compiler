@@ -132,13 +132,12 @@ class MyLexer implements Parser.Lexer {
                 }
                 yylval = new BadToken(v);
                 return YYUNDEF;
-            case '\'':
             case '(':
+                return LPAREN;
             case ')':
-            case '\n':
-            case ' ':
-            case '\t':
-                return ttype;
+                return RPAREN;
+            case '\'':
+                return QUOTE_SYMBOL;
             default:
                 yylval = new BadToken(String.valueOf(ttype));
                 return YYUNDEF;

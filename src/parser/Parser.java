@@ -131,18 +131,18 @@ public class Parser
     S_REAL(4),                     /* REAL  */
     S_BOOLEAN(5),                  /* BOOLEAN  */
     S_ATOM(6),                     /* ATOM  */
-    S_QUOTE(7),                    /* QUOTE  */
-    S_SETQ(8),                     /* SETQ  */
-    S_FUNC(9),                     /* FUNC  */
-    S_LAMBDA(10),                  /* LAMBDA  */
-    S_PROG(11),                    /* PROG  */
-    S_COND(12),                    /* COND  */
-    S_WHILE(13),                   /* WHILE  */
-    S_RETURN(14),                  /* RETURN  */
-    S_BREAK(15),                   /* BREAK  */
-    S_16_(16),                     /* '\''  */
-    S_17_(17),                     /* '('  */
-    S_18_(18),                     /* ')'  */
+    S_LPAREN(7),                   /* "("  */
+    S_RPAREN(8),                   /* ")"  */
+    S_QUOTE_SYMBOL(9),             /* "'"  */
+    S_QUOTE(10),                   /* QUOTE  */
+    S_SETQ(11),                    /* SETQ  */
+    S_FUNC(12),                    /* FUNC  */
+    S_LAMBDA(13),                  /* LAMBDA  */
+    S_PROG(14),                    /* PROG  */
+    S_COND(15),                    /* COND  */
+    S_WHILE(16),                   /* WHILE  */
+    S_RETURN(17),                  /* RETURN  */
+    S_BREAK(18),                   /* BREAK  */
     S_YYACCEPT(19),                /* $accept  */
     S_program(20),                 /* program  */
     S_element(21),                 /* element  */
@@ -169,6 +169,9 @@ public class Parser
       SymbolKind.S_REAL,
       SymbolKind.S_BOOLEAN,
       SymbolKind.S_ATOM,
+      SymbolKind.S_LPAREN,
+      SymbolKind.S_RPAREN,
+      SymbolKind.S_QUOTE_SYMBOL,
       SymbolKind.S_QUOTE,
       SymbolKind.S_SETQ,
       SymbolKind.S_FUNC,
@@ -178,9 +181,6 @@ public class Parser
       SymbolKind.S_WHILE,
       SymbolKind.S_RETURN,
       SymbolKind.S_BREAK,
-      SymbolKind.S_16_,
-      SymbolKind.S_17_,
-      SymbolKind.S_18_,
       SymbolKind.S_YYACCEPT,
       SymbolKind.S_program,
       SymbolKind.S_element,
@@ -209,10 +209,10 @@ public class Parser
     return new String[]
     {
   "end of file", "error", "invalid token", "INTEGER", "REAL", "BOOLEAN",
-  "ATOM", "QUOTE", "SETQ", "FUNC", "LAMBDA", "PROG", "COND", "WHILE",
-  "RETURN", "BREAK", "'\\''", "'('", "')'", "$accept", "program",
-  "element", "identifier", "literal", "list", "list_elements",
-  "special_form", "list_of_atoms", "atoms_sequence", null
+  "ATOM", "(", ")", "'", "QUOTE", "SETQ", "FUNC", "LAMBDA", "PROG", "COND",
+  "WHILE", "RETURN", "BREAK", "$accept", "program", "element",
+  "identifier", "literal", "list", "list_elements", "special_form",
+  "list_of_atoms", "atoms_sequence", null
     };
   }
 
@@ -243,24 +243,30 @@ public class Parser
     static final int BOOLEAN = 260;
     /** Token ATOM, to be returned by the scanner.  */
     static final int ATOM = 261;
+    /** Token "(", to be returned by the scanner.  */
+    static final int LPAREN = 262;
+    /** Token ")", to be returned by the scanner.  */
+    static final int RPAREN = 263;
+    /** Token "'", to be returned by the scanner.  */
+    static final int QUOTE_SYMBOL = 264;
     /** Token QUOTE, to be returned by the scanner.  */
-    static final int QUOTE = 262;
+    static final int QUOTE = 265;
     /** Token SETQ, to be returned by the scanner.  */
-    static final int SETQ = 263;
+    static final int SETQ = 266;
     /** Token FUNC, to be returned by the scanner.  */
-    static final int FUNC = 264;
+    static final int FUNC = 267;
     /** Token LAMBDA, to be returned by the scanner.  */
-    static final int LAMBDA = 265;
+    static final int LAMBDA = 268;
     /** Token PROG, to be returned by the scanner.  */
-    static final int PROG = 266;
+    static final int PROG = 269;
     /** Token COND, to be returned by the scanner.  */
-    static final int COND = 267;
+    static final int COND = 270;
     /** Token WHILE, to be returned by the scanner.  */
-    static final int WHILE = 268;
+    static final int WHILE = 271;
     /** Token RETURN, to be returned by the scanner.  */
-    static final int RETURN = 269;
+    static final int RETURN = 272;
     /** Token BREAK, to be returned by the scanner.  */
-    static final int BREAK = 270;
+    static final int BREAK = 273;
 
     /** Deprecated, use YYEOF instead.  */
     public static final int EOF = YYEOF;
@@ -543,141 +549,190 @@ public class Parser
 
     switch (yyn)
       {
-          case 3: /* program: program element  */
+          case 2: /* program: %empty  */
+  if (yyn == 2)
+    /* "src/parser/parser.y":71  */
+                  { ast = new ElementsList();};
+  break;
+
+
+  case 3: /* program: program element  */
   if (yyn == 3)
-    /* "src/parser/parser.y":67  */
-                                  { ast.add(((IElement)(yystack.valueAt (0)))); };
+    /* "src/parser/parser.y":72  */
+                  { ast.add(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
-  case 7: /* element: '\'' element  */
+  case 4: /* element: identifier  */
+  if (yyn == 4)
+    /* "src/parser/parser.y":76  */
+              { yyval = ((Atom)(yystack.valueAt (0))); };
+  break;
+
+
+  case 5: /* element: literal  */
+  if (yyn == 5)
+    /* "src/parser/parser.y":77  */
+              { yyval = ((IElement)(yystack.valueAt (0))); };
+  break;
+
+
+  case 6: /* element: list  */
+  if (yyn == 6)
+    /* "src/parser/parser.y":78  */
+              { yyval = ((IElement)(yystack.valueAt (0))); };
+  break;
+
+
+  case 7: /* element: "'" element  */
   if (yyn == 7)
-    /* "src/parser/parser.y":73  */
-               { yyval = new Quote(((IElement)(yystack.valueAt (0)))); };
+    /* "src/parser/parser.y":79  */
+              { yyval = new Quote(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
-  case 12: /* list: '(' list_elements ')'  */
+  case 9: /* literal: INTEGER  */
+  if (yyn == 9)
+    /* "src/parser/parser.y":84  */
+          { yyval = ((IntegerLiteral)(yystack.valueAt (0))); };
+  break;
+
+
+  case 10: /* literal: REAL  */
+  if (yyn == 10)
+    /* "src/parser/parser.y":85  */
+          { yyval = ((RealLiteral)(yystack.valueAt (0))); };
+  break;
+
+
+  case 11: /* literal: BOOLEAN  */
+  if (yyn == 11)
+    /* "src/parser/parser.y":86  */
+          { yyval = ((BooleanLiteral)(yystack.valueAt (0))); };
+  break;
+
+
+  case 12: /* list: "(" list_elements ")"  */
   if (yyn == 12)
-    /* "src/parser/parser.y":80  */
+    /* "src/parser/parser.y":90  */
                         { yyval = ((ElementsList)(yystack.valueAt (1))); };
   break;
 
 
-  case 13: /* list: '(' special_form ')'  */
+  case 13: /* list: "(" special_form ")"  */
   if (yyn == 13)
-    /* "src/parser/parser.y":81  */
+    /* "src/parser/parser.y":91  */
                         { yyval = ((IElement)(yystack.valueAt (1))); };
   break;
 
 
   case 14: /* list_elements: %empty  */
   if (yyn == 14)
-    /* "src/parser/parser.y":85  */
+    /* "src/parser/parser.y":95  */
                         { yyval = new ElementsList(); };
   break;
 
 
   case 15: /* list_elements: list_elements element  */
   if (yyn == 15)
-    /* "src/parser/parser.y":86  */
+    /* "src/parser/parser.y":96  */
                         { yyval = ((ElementsList)(yystack.valueAt (1))); ((ElementsList)(yystack.valueAt (1))).add(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 16: /* special_form: QUOTE element  */
   if (yyn == 16)
-    /* "src/parser/parser.y":90  */
+    /* "src/parser/parser.y":100  */
                                         { yyval = new Quote(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 17: /* special_form: SETQ identifier element  */
   if (yyn == 17)
-    /* "src/parser/parser.y":91  */
+    /* "src/parser/parser.y":101  */
                                         { yyval = new Setq(((Atom)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 18: /* special_form: FUNC identifier list_of_atoms element  */
   if (yyn == 18)
-    /* "src/parser/parser.y":92  */
+    /* "src/parser/parser.y":102  */
                                         { yyval = new Func(((Atom)(yystack.valueAt (2))), ((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 19: /* special_form: LAMBDA list_of_atoms element  */
   if (yyn == 19)
-    /* "src/parser/parser.y":93  */
+    /* "src/parser/parser.y":103  */
                                         { yyval = new Lambda(((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 20: /* special_form: PROG list_of_atoms element  */
   if (yyn == 20)
-    /* "src/parser/parser.y":94  */
+    /* "src/parser/parser.y":104  */
                                         { yyval = new Prog(((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 21: /* special_form: COND element element  */
   if (yyn == 21)
-    /* "src/parser/parser.y":95  */
+    /* "src/parser/parser.y":105  */
                                         { yyval = new Cond(((IElement)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 22: /* special_form: COND element element element  */
   if (yyn == 22)
-    /* "src/parser/parser.y":96  */
+    /* "src/parser/parser.y":106  */
                                         { yyval = new Cond(((IElement)(yystack.valueAt (2))), ((IElement)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 23: /* special_form: WHILE element element  */
   if (yyn == 23)
-    /* "src/parser/parser.y":97  */
+    /* "src/parser/parser.y":107  */
                                         { yyval = new While(((IElement)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 24: /* special_form: RETURN element  */
   if (yyn == 24)
-    /* "src/parser/parser.y":98  */
+    /* "src/parser/parser.y":108  */
                                         { yyval = new Return(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 25: /* special_form: BREAK  */
   if (yyn == 25)
-    /* "src/parser/parser.y":99  */
+    /* "src/parser/parser.y":109  */
                                         { yyval = new Break(); };
   break;
 
 
-  case 26: /* list_of_atoms: '(' atoms_sequence ')'  */
+  case 26: /* list_of_atoms: "(" atoms_sequence ")"  */
   if (yyn == 26)
-    /* "src/parser/parser.y":102  */
+    /* "src/parser/parser.y":112  */
                                       { yyval = ((LinkedList<Atom>)(yystack.valueAt (1))); };
   break;
 
 
   case 27: /* atoms_sequence: %empty  */
   if (yyn == 27)
-    /* "src/parser/parser.y":105  */
+    /* "src/parser/parser.y":115  */
                             { yyval = new LinkedList<Atom>(); };
   break;
 
 
   case 28: /* atoms_sequence: atoms_sequence identifier  */
   if (yyn == 28)
-    /* "src/parser/parser.y":106  */
+    /* "src/parser/parser.y":116  */
                             { yyval = ((LinkedList<Atom>)(yystack.valueAt (1))); ((LinkedList<Atom>)(yystack.valueAt (1))).add(((Atom)(yystack.valueAt (0)))); };
   break;
 
 
 
-/* "src/parser/Parser.java":681  */
+/* "src/parser/Parser.java":736  */
 
         default: break;
       }
@@ -1121,7 +1176,7 @@ public class Parser
     return yyvalue == yytable_ninf_;
   }
 
-  private static final byte yypact_ninf_ = -18;
+  private static final byte yypact_ninf_ = -15;
   private static final byte yytable_ninf_ = -1;
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
@@ -1131,11 +1186,11 @@ public class Parser
   {
     return new byte[]
     {
-     -18,    33,   -18,   -18,   -18,   -18,   -18,    40,    51,   -18,
-     -18,   -18,   -18,   -18,    40,    -2,    -2,   -11,   -11,    40,
-      40,    40,   -18,    24,   -10,   -18,    40,   -11,   -18,    40,
-      40,    40,    40,   -18,   -18,   -18,   -18,   -18,    40,    -1,
-     -18,   -18,    40,   -18,   -18,   -18,   -18,   -18
+     -15,    32,   -15,   -15,   -15,   -15,   -15,    33,    56,   -15,
+     -15,   -15,   -15,    56,     1,     1,     2,     2,    56,    56,
+      56,   -15,    49,     0,   -15,   -15,    56,     2,   -15,    56,
+      56,    56,    56,   -15,   -15,   -15,   -15,   -15,    56,    -2,
+     -15,   -15,    56,   -15,   -15,   -15,   -15,   -15
     };
   }
 
@@ -1147,9 +1202,9 @@ public class Parser
   {
     return new byte[]
     {
-       2,     0,     1,     9,    10,    11,     8,     0,    14,     3,
-       4,     5,     6,     7,     0,     0,     0,     0,     0,     0,
-       0,     0,    25,     0,     0,    16,     0,     0,    27,     0,
+       2,     0,     1,     9,    10,    11,     8,    14,     0,     3,
+       4,     5,     6,     0,     0,     0,     0,     0,     0,     0,
+       0,    25,     0,     0,     7,    16,     0,     0,    27,     0,
        0,     0,     0,    24,    12,    15,    13,    17,     0,     0,
       19,    20,    21,    23,    18,    26,    28,    22
     };
@@ -1161,7 +1216,7 @@ public class Parser
   {
     return new byte[]
     {
-     -18,   -18,    -7,   -13,   -18,   -18,   -18,   -18,   -17,   -18
+     -15,   -15,    -8,   -13,   -15,   -15,   -15,   -15,   -14,   -15
     };
   }
 
@@ -1171,7 +1226,7 @@ public class Parser
   {
     return new byte[]
     {
-      -1,     1,     9,    10,    11,    12,    23,    24,    29,    39
+      -1,     1,     9,    10,    11,    12,    22,    23,    29,    39
     };
   }
 
@@ -1183,13 +1238,13 @@ public class Parser
   {
     return new byte[]
     {
-      13,    30,    26,    27,     6,     6,    28,    25,    36,     0,
-      38,     0,    31,    32,    33,     0,    35,    45,     0,    37,
-       0,     0,    40,    41,    42,    43,    46,     3,     4,     5,
-       6,    44,     0,     2,     0,    47,     3,     4,     5,     6,
-       7,     8,    34,     3,     4,     5,     6,     0,     0,     7,
-       8,     0,     0,     0,     0,     0,     7,     8,    14,    15,
-      16,    17,    18,    19,    20,    21,    22
+      24,    26,    27,    30,     6,    25,    45,     6,    36,    28,
+      31,    32,    33,    38,    35,     0,     0,     0,    37,     0,
+       0,    40,    41,    42,    43,     0,    46,     0,     0,     0,
+      44,     0,     2,     0,    47,     3,     4,     5,     6,     7,
+       0,     8,     0,    13,    14,    15,    16,    17,    18,    19,
+      20,    21,     3,     4,     5,     6,     7,    34,     8,     3,
+       4,     5,     6,     7,     0,     8
     };
   }
 
@@ -1198,13 +1253,13 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       7,    18,    15,    16,     6,     6,    17,    14,    18,    -1,
-      27,    -1,    19,    20,    21,    -1,    23,    18,    -1,    26,
-      -1,    -1,    29,    30,    31,    32,    39,     3,     4,     5,
-       6,    38,    -1,     0,    -1,    42,     3,     4,     5,     6,
-      16,    17,    18,     3,     4,     5,     6,    -1,    -1,    16,
-      17,    -1,    -1,    -1,    -1,    -1,    16,    17,     7,     8,
-       9,    10,    11,    12,    13,    14,    15
+       8,    14,    15,    17,     6,    13,     8,     6,     8,     7,
+      18,    19,    20,    27,    22,    -1,    -1,    -1,    26,    -1,
+      -1,    29,    30,    31,    32,    -1,    39,    -1,    -1,    -1,
+      38,    -1,     0,    -1,    42,     3,     4,     5,     6,     7,
+      -1,     9,    -1,    10,    11,    12,    13,    14,    15,    16,
+      17,    18,     3,     4,     5,     6,     7,     8,     9,     3,
+       4,     5,     6,     7,    -1,     9
     };
   }
 
@@ -1215,11 +1270,11 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    20,     0,     3,     4,     5,     6,    16,    17,    21,
-      22,    23,    24,    21,     7,     8,     9,    10,    11,    12,
-      13,    14,    15,    25,    26,    21,    22,    22,    17,    27,
-      27,    21,    21,    21,    18,    21,    18,    21,    27,    28,
-      21,    21,    21,    21,    21,    18,    22,    21
+       0,    20,     0,     3,     4,     5,     6,     7,     9,    21,
+      22,    23,    24,    10,    11,    12,    13,    14,    15,    16,
+      17,    18,    25,    26,    21,    21,    22,    22,     7,    27,
+      27,    21,    21,    21,     8,    21,     8,    21,    27,    28,
+      21,    21,    21,    21,    21,     8,    22,    21
     };
   }
 
@@ -1255,9 +1310,9 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    67,    67,    67,    70,    71,    72,    73,    76,    77,
-      77,    77,    80,    81,    85,    86,    90,    91,    92,    93,
-      94,    95,    96,    97,    98,    99,   102,   105,   106
+       0,    71,    71,    72,    76,    77,    78,    79,    82,    84,
+      85,    86,    90,    91,    95,    96,   100,   101,   102,   103,
+     104,   105,   106,   107,   108,   109,   112,   115,   116
     };
   }
 
@@ -1287,7 +1342,7 @@ private static final byte[] yycheck_ = yycheck_init();
   private static final SymbolKind yytranslate_(int t)
   {
     // Last valid token kind.
-    int code_max = 270;
+    int code_max = 273;
     if (t <= 0)
       return SymbolKind.S_YYEOF;
     else if (t <= code_max)
@@ -1303,8 +1358,8 @@ private static final byte[] yycheck_ = yycheck_init();
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    16,
-      17,    18,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -1327,12 +1382,12 @@ private static final byte[] yycheck_ = yycheck_init();
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15
+      15,    16,    17,    18
     };
   }
 
 
-  private static final int YYLAST_ = 66;
+  private static final int YYLAST_ = 65;
   private static final int YYEMPTY_ = -2;
   private static final int YYFINAL_ = 2;
   private static final int YYNTOKENS_ = 19;
@@ -1342,7 +1397,6 @@ private static final byte[] yycheck_ = yycheck_init();
 
     private static ElementsList ast;
     public static ElementsList makeAST() throws IOException {
-        ast = new ElementsList();
         MyLexer l = new MyLexer(System.in);
         Parser p = new parser.Parser(l);
         int status;
@@ -1358,8 +1412,8 @@ private static final byte[] yycheck_ = yycheck_init();
         return ast;
     }
 
-/* "src/parser/Parser.java":1362  */
+/* "src/parser/Parser.java":1416  */
 
 }
-/* "src/parser/parser.y":108  */
+/* "src/parser/parser.y":118  */
 

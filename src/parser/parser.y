@@ -20,7 +20,6 @@ import lexems.*;
 %code {
     private static ElementsList ast;
     public static ElementsList makeAST() throws IOException {
-        ast = new ElementsList();
         MyLexer l = new MyLexer(System.in);
         Parser p = new parser.Parser(l);
         int status;
@@ -42,6 +41,10 @@ import lexems.*;
 %token <BooleanLiteral> BOOLEAN
 %token <Atom>           ATOM
 
+%token LPAREN       "("
+%token RPAREN       ")"
+%token QUOTE_SYMBOL "'"
+
 %token <Quote>          QUOTE
 %token <Setq>           SETQ
 %token <Func>           FUNC
@@ -56,7 +59,7 @@ import lexems.*;
 %type <IElement>         element
 %type <Atom>             identifier
 %type <IElement>         literal
-%type <ElementsList>     list
+%type <IElement>         list
 %type <ElementsList>     list_elements
 %type <IElement>         special_form
 %type <LinkedList<Atom>> list_of_atoms
@@ -64,21 +67,28 @@ import lexems.*;
 
 
 %%
-program: %empty | program element { ast.add($2); };
+program:
+  %empty          { ast = new ElementsList();}
+| program element { ast.add($2); }
+;
 
 element:
-  identifier
-| literal
-| list
-| '\'' element { $$ = new Quote($2); }
+  identifier  { $$ = $1; }
+| literal     { $$ = $1; }
+| list        { $$ = $1; }
+| "'" element { $$ = new Quote($2); }
 ;
 
 identifier: ATOM;
-literal: INTEGER | REAL | BOOLEAN;
+literal:
+  INTEGER { $$ = $1; }
+| REAL    { $$ = $1; }
+| BOOLEAN { $$ = $1; }
+;
 
 list:
-  '(' list_elements ')' { $$ = $2; }
-| '(' special_form ')'  { $$ = $2; }
+  "(" list_elements ")" { $$ = $2; }
+| "(" special_form ")"  { $$ = $2; }
 ;
 
 list_elements:
@@ -99,7 +109,7 @@ special_form:
 | BREAK                                 { $$ = new Break(); }
 ;
 
-list_of_atoms: '(' atoms_sequence ')' { $$ = $2; };
+list_of_atoms: "(" atoms_sequence ")" { $$ = $2; };
 
 atoms_sequence:
   %empty                    { $$ = new LinkedList<Atom>(); }
