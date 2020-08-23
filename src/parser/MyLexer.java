@@ -25,10 +25,9 @@ class MyLexer implements Parser.Lexer {
         reader = new PositionReader(new InputStreamReader(is));
         st = new StreamTokenizer(reader);
         st.resetSyntax();
-        st.eolIsSignificant(true);
-        st.ordinaryChars('\n', '\n');
-        st.ordinaryChars('\t', '\t');
-        st.ordinaryChars(' ', ' ');
+        st.whitespaceChars('\n', '\n');
+        st.whitespaceChars('\t', '\t');
+        st.whitespaceChars(' ', ' ');
         st.wordChars('0', '9');
         st.wordChars('a', 'z');
         st.wordChars('A', 'Z');
@@ -107,32 +106,25 @@ class MyLexer implements Parser.Lexer {
                     yylval = new BooleanLiteral(Boolean.parseBoolean(v));
                     return BOOLEAN;
                 }
-                if (v.equals("quote")) {
-                    return QUOTE;
-                }
-                if (v.equals("setq")) {
-                    return SETQ;
-                }
-                if (v.equals("func")) {
-                    return FUNC;
-                }
-                if (v.equals("lambda")) {
-                    return LAMBDA;
-                }
-                if (v.equals("prog")) {
-                    return PROG;
-                }
-                if (v.equals("cond")) {
-                    return COND;
-                }
-                if (v.equals("while")) {
-                    return WHILE;
-                }
-                if (v.equals("return")) {
-                    return RETURN;
-                }
-                if (v.equals("break")) {
-                    return BREAK;
+                switch (v.toLowerCase()) {
+                    case "quote":
+                        return QUOTE;
+                    case "setq":
+                        return SETQ;
+                    case "func":
+                        return FUNC;
+                    case "lambda":
+                        return LAMBDA;
+                    case "prog":
+                        return PROG;
+                    case "cond":
+                        return COND;
+                    case "while":
+                        return WHILE;
+                    case "return":
+                        return RETURN;
+                    case "break":
+                        return BREAK;
                 }
                 if (identifierPattern.matcher(v).matches()) {
                     yylval = new Atom(v);
@@ -148,7 +140,7 @@ class MyLexer implements Parser.Lexer {
             case '\t':
                 return ttype;
             default:
-                yylval = new BadToken(st.sval);
+                yylval = new BadToken(String.valueOf(ttype));
                 return YYUNDEF;
         }
     }

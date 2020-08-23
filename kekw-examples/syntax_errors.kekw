@@ -1,4 +1,8 @@
 a
 5
-! 5a
-! -
+true
+# 5a
+# a )
+# a -
+# ( break a )
+# ( func a a (plus 1 2))
