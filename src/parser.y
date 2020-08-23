@@ -3,8 +3,12 @@
 %define api.parser.class {Parser}
 %define api.value.type {lexems.IElement}
 %define api.parser.public
+%define api.push-pull push
 
-%define parse.error verbose
+%define parse.error custom
+%define parse.trace
+
+%locations
 
 %code imports {
 import java.io.IOException;
@@ -14,10 +18,17 @@ import java.io.IOException;
     private static lexems.ElementsList ast;
     public static lexems.IElement makeAST() throws IOException {
         ast = new lexems.ElementsList();
-        Lexer l = new MyLexer(System.in);
+        MyLexer l = new MyLexer(System.in);
         Parser p = new Parser(l);
-        if (!p.parse()) {
-            System.exit(1);
+        int status;
+        do {
+            int token = l.getToken();
+            lexems.IElement lval = l.getValue();
+            Parser.Location yyloc = l.getLocation();
+            status = p.push_parse(token, lval, yyloc);
+        } while (status == Parser.YYPUSH_MORE);
+        if (status != Parser.YYACCEPT) {
+            return null;
         }
         return ast;
     }
@@ -37,7 +48,7 @@ import java.io.IOException;
 %%
 program:
   %empty { }
-| program element { ast.add($2); }
+| list_elements { ast = $1; }
 ;
 
 element:
@@ -45,6 +56,7 @@ element:
 | literal
 | list
 | '\'' element { $$ = new lexems.ElementsList(new lexems.Identifier("quote"), $2); }
+| error ')' { return YYERROR; }
 ;
 
 literal:
@@ -53,10 +65,17 @@ literal:
 | BOOLEAN
 ;
 
+single_separator: ' ' | '\n' | '\t';
+separator: single_separator | single_separator separator;
+optional_separator: %empty | separator;
+
 list:
-  '(' list_elements ')' { $$ = $2; }
+  '(' optional_separator ')'                                  { $$ = new lexems.ElementsList(); }
+| '(' optional_separator list_elements optional_separator ')' { $$ = $3; }
+;
+
 list_elements:
-  %empty                { $$ = new lexems.ElementsList(); }
-| list_elements element { $1.add($2); $$ = $1; }
+   element                        { $$ = new lexems.ElementsList($1); }
+| list_elements separator element { $1.add($3); $$ = $1; }
 ;
 %%
