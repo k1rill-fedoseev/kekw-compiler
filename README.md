@@ -1,5 +1,7 @@
 ## KEKW lang interpreter
 
+![CI](https://github.com/k1rill-fedoseev/kekw-compiler/workflows/CI/badge.svg?branch=master)
+
 ## Language examples
 KEKW programs examples are located in the `./kekw-examples`.
 
