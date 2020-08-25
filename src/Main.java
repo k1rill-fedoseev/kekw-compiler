@@ -22,7 +22,7 @@ public class Main {
         Interpreter interpreter = new Interpreter(new Scope());
 
         for (IElement elem: ast) {
-            System.out.println(interpreter.execute(elem));
+            //System.out.println(interpreter.execute(elem));
         }
     }
 }

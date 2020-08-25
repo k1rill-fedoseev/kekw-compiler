@@ -1,6 +1,13 @@
-## KEKW lang interpreter/compiler
+## KEKW lang interpreter
 
-Language examples are located in the `./kekw-examples`.
+## Language examples
+KEKW programs examples are located in the `./kekw-examples`.
+
+## Implementation details
+Interpreter uses hand-written lexer which is based on the Java's `StreamTokenizer`.
+
+Parser was generated using GNU Bison 3.7.1.
+YACC file for generation with detailed grammar description can be found at `./src/parser/parser.y`.
 
 ## Run interpreter for some .kekw file
 ```shell script

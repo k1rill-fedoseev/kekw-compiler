@@ -9,17 +9,17 @@ import java.io.StreamTokenizer;
 import java.util.regex.Pattern;
 
 class MyLexer implements Parser.Lexer {
-    private final Pattern integerPattern = Pattern.compile("[+\\-]?[0-9]+");
-    private final Pattern realPattern = Pattern.compile("[+\\-]?[0-9]*\\.[0-9]+");
-    private final Pattern boolPattern = Pattern.compile("(true|false)");
-    private final Pattern identifierPattern = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
+    private final Pattern INTEGER_PATTERN = Pattern.compile("[+\\-]?[0-9]+");
+    private final Pattern REAL_PATTERN = Pattern.compile("[+\\-]?[0-9]*\\.[0-9]+");
+    private final Pattern BOOL_PATTERN = Pattern.compile("(true|false)");
+    private final Pattern IDENTIFIER_PATTERN = Pattern.compile("[a-zA-Z_][a-zA-Z_0-9]*");
 
     StreamTokenizer st;
     PositionReader reader;
 
-    private IElement yylval;
-    Position start = new Position(1, 0);
-    Position end = new Position(1, 0);
+    private IElement lastToken;
+    Position lastTokenStart = new Position(1, 0);
+    Position lastTokenEnd = new Position(1, 0);
 
     public MyLexer(InputStream is) {
         reader = new PositionReader(new InputStreamReader(is));
@@ -45,7 +45,7 @@ class MyLexer implements Parser.Lexer {
      * Build and emit a syntax error message.
      */
     public void reportSyntaxError(Parser.Context ctx) {
-        System.err.print(ctx.getLocation() + ": syntax error");
+        yyerror(ctx.getLocation(), "syntax error");
         final int TOKENMAX = 10;
         Parser.SymbolKind[] arg = new Parser.SymbolKind[TOKENMAX];
         int n = ctx.getExpectedTokens(arg, TOKENMAX);
@@ -54,11 +54,10 @@ class MyLexer implements Parser.Lexer {
         }
         Parser.SymbolKind lookahead = ctx.getToken();
         if (lookahead != null && lookahead != Parser.SymbolKind.S_YYUNDEF) {
-            System.err.print(" before " + lookahead.getName());
+            System.err.println(" before " + lookahead.getName());
         } else {
-            System.err.print(", got invalid token " + getValue() + " instead");
+            System.err.println(", got invalid token " + getValue() + " instead");
         }
-        System.err.println();
     }
 
     /**
@@ -77,33 +76,33 @@ class MyLexer implements Parser.Lexer {
     }
 
     public Parser.Location getLocation() {
-        return new Parser.Location(new Position(start), new Position(end));
+        return new Parser.Location(new Position(lastTokenStart), new Position(lastTokenEnd));
     }
 
     public IElement getValue() {
-        return yylval;
+        return lastToken;
     }
 
     public int getToken() throws IOException {
-        start.set(reader.getPosition());
+        lastTokenStart.set(reader.getPosition());
         int ttype = st.nextToken();
-        end.set(reader.getPosition());
+        lastTokenEnd.set(reader.getPosition());
         switch (ttype) {
             case StreamTokenizer.TT_EOF:
                 return YYEOF;
             case StreamTokenizer.TT_WORD:
                 String v = st.sval;
-                end.set(reader.getPreviousPosition());
-                if (integerPattern.matcher(v).matches()) {
-                    yylval = new IntegerLiteral(Integer.parseInt(v));
+                lastTokenEnd.set(reader.getPreviousPosition());
+                if (INTEGER_PATTERN.matcher(v).matches()) {
+                    lastToken = new IntegerLiteral(Integer.parseInt(v));
                     return INTEGER;
                 }
-                if (realPattern.matcher(v).matches()) {
-                    yylval = new RealLiteral(Float.parseFloat(v));
+                if (REAL_PATTERN.matcher(v).matches()) {
+                    lastToken = new RealLiteral(Float.parseFloat(v));
                     return REAL;
                 }
-                if (boolPattern.matcher(v).matches()) {
-                    yylval = new BooleanLiteral(Boolean.parseBoolean(v));
+                if (BOOL_PATTERN.matcher(v).matches()) {
+                    lastToken = new BooleanLiteral(Boolean.parseBoolean(v));
                     return BOOLEAN;
                 }
                 switch (v.toLowerCase()) {
@@ -126,11 +125,11 @@ class MyLexer implements Parser.Lexer {
                     case "break":
                         return BREAK;
                 }
-                if (identifierPattern.matcher(v).matches()) {
-                    yylval = new Atom(v);
+                if (IDENTIFIER_PATTERN.matcher(v).matches()) {
+                    lastToken = new Atom(v);
                     return ATOM;
                 }
-                yylval = new BadToken(v);
+                lastToken = new BadToken(v);
                 return YYUNDEF;
             case '(':
                 return LPAREN;
@@ -139,7 +138,7 @@ class MyLexer implements Parser.Lexer {
             case '\'':
                 return QUOTE_SYMBOL;
             default:
-                yylval = new BadToken(String.valueOf(ttype));
+                lastToken = new BadToken(String.valueOf(ttype));
                 return YYUNDEF;
         }
     }

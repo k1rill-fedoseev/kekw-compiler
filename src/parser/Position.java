@@ -31,14 +31,6 @@ public class Position {
     }
 
     public String toString() {
-        return line + "." + column;
-    }
-
-    public int line() {
-        return line;
-    }
-
-    public int column() {
-        return column;
+        return "L" + line + "." + column;
     }
 }

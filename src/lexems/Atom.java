@@ -17,18 +17,9 @@ public class Atom implements IElement {
         this.v = v;
     }
 
-    public boolean isKeyword() {
-        for(String s: keywords) {
-            if (s.equals(v)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public String toString() {
-        return "Identifier{" +
+        return "Atom{" +
                 "v='" + v + '\'' +
                 '}';
     }
