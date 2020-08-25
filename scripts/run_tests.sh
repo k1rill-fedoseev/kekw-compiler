@@ -2,7 +2,11 @@
 
 set -e
 
-docker-compose build -q kekw
+if [[ "$1" = "verbose" ]]; then
+  docker-compose build kekw
+else
+  docker-compose build -q kekw
+fi
 
 for TEST_NAME in ./kekw-examples/*.kekw; do
     echo "Running $TEST_NAME"
