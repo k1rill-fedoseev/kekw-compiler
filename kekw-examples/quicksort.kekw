@@ -6,6 +6,6 @@
 
 (func filterBigger (x arr acc) (cond (isnull arr) () (filter x (tail arr) (cond (greater (head arr) x) (cons (head arr) acc) acc))))
 
-(func quicksort (arr) (cond (isnull arrr) () (concat (concat (filterSmaller (head arr) arr ()) (head arr)) (filterBigger (head arr) arr ()))))
+(func quicksort (arr) (cond (isnull arrr) () (concat (quicksort (concat (filterSmaller (head arr) arr ()) (head arr))) (quicksort (filterBigger (head arr) arr ())))))
 
 (quicksort arr)
