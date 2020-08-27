@@ -17,12 +17,15 @@ YACC file for generation with detailed grammar description can be found at `./sr
 ./scripts/run.sh ./kekw-examples/prog.kekw  
 ```
 
+To run all tests:
+```shell script
+./scripts/run_tests.sh
+```
+
+Both commands support `verbose` option for enhanced logging.
+
+
 ## Generate java class for parser
 ```shell script
 ./scripts/generate_parser.sh
-```
-
-## Run tests
-```shell script
-./scripts/run_tests.sh
 ```
