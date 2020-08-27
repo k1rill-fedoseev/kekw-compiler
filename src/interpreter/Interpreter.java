@@ -10,6 +10,12 @@ public class Interpreter {
     public Interpreter(SymbolTable globalScope) {
         this.st = globalScope;
         st.define(new Plus());
+        st.define(new Minus());
+        st.define(new Times());
+        st.define(new Divide());
+
+        st.define(new Head());
+        st.define(new Tail());
     }
 
     public IElement execute(IElement elem) {
@@ -30,6 +36,8 @@ public class Interpreter {
                         return f.execute(args);
                     }
                 }
+            } else {
+                return elem;
             }
         } else {
             return elem;

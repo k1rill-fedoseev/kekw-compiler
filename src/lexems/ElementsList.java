@@ -1,6 +1,7 @@
 package lexems;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ElementsList extends LinkedList<IElement> implements IElement {
     public ElementsList() {
@@ -15,6 +16,10 @@ public class ElementsList extends LinkedList<IElement> implements IElement {
     public ElementsList(IElement elem1, IElement elem2) {
         this(elem1);
         add(elem2);
+    }
+
+    public ElementsList(List<IElement> list) {
+        this.addAll(list);
     }
 
     @Override
