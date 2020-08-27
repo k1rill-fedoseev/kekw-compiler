@@ -2,10 +2,10 @@
 
 (func concat (a1 a2) (cond (isnull a2) a1 (concat (cons a1 (head a2)) (tail a2))))
 
-(func filterSmaller (x arr acc) (cond (isnull arr) () (filter x (tail arr) (cond (less (head arr) x) (cons (head arr) acc) acc))))
+(func filterSmaller (x arr acc) (cond (isnull arr) acc (filterSmaller x (tail arr) (cond (less (head arr) x) (cons (head arr) acc) acc))))
 
-(func filterBigger (x arr acc) (cond (isnull arr) () (filter x (tail arr) (cond (greater (head arr) x) (cons (head arr) acc) acc))))
+(func filterBigger (x arr acc) (cond (isnull arr) acc (filterBigger x (tail arr) (cond (greater (head arr) x) (cons (head arr) acc) acc))))
 
-(func quicksort (arr) (cond (isnull arrr) () (concat (quicksort (concat (filterSmaller (head arr) arr ()) (head arr))) (quicksort (filterBigger (head arr) arr ())))))
+(func quicksort (arr) (cond (isnull arr) () (concat (concat (quicksort (filterSmaller (head arr) arr ())) (head arr)) (quicksort (filterBigger (head arr) arr ())))))
 
 (quicksort arr)
