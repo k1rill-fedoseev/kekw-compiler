@@ -16,4 +16,8 @@ public class Setq implements IElement {
                 ", v=" + v +
                 '}';
     }
+
+    public String getName() {
+        return id.v;
+    }
 }

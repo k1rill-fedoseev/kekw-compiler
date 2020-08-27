@@ -1,5 +1,5 @@
 import interpreter.Interpreter;
-import interpreter.Scope;
+import interpreter.SymbolTable;
 import lexems.ElementsList;
 import lexems.IElement;
 import parser.Parser;
@@ -19,7 +19,7 @@ public class Main {
         }
         res.append("]");
         System.out.println(res.toString());
-        Interpreter interpreter = new Interpreter(new Scope());
+        Interpreter interpreter = new Interpreter(new SymbolTable());
 
         for (IElement elem: ast) {
             //System.out.println(interpreter.execute(elem));

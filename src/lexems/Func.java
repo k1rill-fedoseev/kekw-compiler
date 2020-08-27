@@ -21,4 +21,8 @@ public class Func implements IElement {
                 ", v=" + v +
                 '}';
     }
+
+    public String getName() {
+        return id.v;
+    }
 }
