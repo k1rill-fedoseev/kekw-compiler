@@ -8,7 +8,7 @@ public class Interpreter {
     private final SymbolTable st;
 
     public Interpreter(SymbolTable globalScope) {
-        this.st = globalScope;
+        st = globalScope;
         st.define(new Plus());
         st.define(new Minus());
         st.define(new Times());
@@ -39,6 +39,10 @@ public class Interpreter {
             } else {
                 return elem;
             }
+        } else if (elem instanceof Setq){
+            st.define((Setq) elem);
+        } else if (elem instanceof Atom) {
+            return st.lookup(((Atom) elem).v);
         } else {
             return elem;
         }

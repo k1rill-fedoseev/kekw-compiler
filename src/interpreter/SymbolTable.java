@@ -17,7 +17,7 @@ public class SymbolTable {
     }
 
     public void define(Setq s) {
-        table.put(s.getName(), s);
+        table.put(s.getName(), s.getV());
     }
 
     public IElement lookup(String name) {

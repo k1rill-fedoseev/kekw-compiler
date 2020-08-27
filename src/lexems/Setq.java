@@ -20,4 +20,8 @@ public class Setq implements IElement {
     public String getName() {
         return id.v;
     }
+
+    public IElement getV() {
+        return v;
+    }
 }
