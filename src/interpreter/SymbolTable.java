@@ -4,9 +4,10 @@ import java.util.HashMap;
 import lexems.*;
 
 public class SymbolTable {
-    private HashMap<String, IElement> table;
+    private final HashMap<String, IElement> table;
 
     public SymbolTable() {
+        table = new HashMap<>();
 
     }
 
