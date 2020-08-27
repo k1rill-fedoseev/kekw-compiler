@@ -98,7 +98,7 @@ class MyLexer implements Parser.Lexer {
                     return INTEGER;
                 }
                 if (REAL_PATTERN.matcher(v).matches()) {
-                    lastToken = new RealLiteral(Float.parseFloat(v));
+                    lastToken = new RealLiteral(Double.parseDouble(v));
                     return REAL;
                 }
                 if (BOOL_PATTERN.matcher(v).matches()) {
