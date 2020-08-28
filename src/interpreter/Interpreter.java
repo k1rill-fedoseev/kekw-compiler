@@ -22,21 +22,23 @@ public class Interpreter {
     public IElement execute(IElement elem) {
         if (elem instanceof ElementsList){
             ElementsList list = (ElementsList) elem;
+            // Evaluate each element of the list
+            for (int i = 0; i < list.size(); i++) {
+                list.set(i, execute(list.get(i)));
+            }
             IElement first = list.getFirst();
-            if (first instanceof Atom) {
-                Atom id = (Atom) first;
-                IElement lookupVal = st.lookup(id.v);
-                if (lookupVal instanceof Func) {
-                    Func f = (Func) lookupVal;
-                    List<IElement> args;
+            if (first instanceof Func) {
+                Func f = (Func) first;
+                List<IElement> args;
+                if (checkNumberOfArguments(f, list)) {
+                    args = list.subList(1, 1 + f.getArgs().size());
+                    // Builtin function
                     if (f instanceof IBuiltin) {
-                        if (checkNumberOfArguments(f, list)) {
-                            args = list.subList(1, 1 + f.getArgs().size());
-                            for (int i = 0; i < args.size(); i++) {
-                                args.set(i, execute(args.get(i)));
-                            }
-                            return ((IBuiltin) f).execute(args);
-                        }
+                        return ((IBuiltin) f).execute(args);
+                    }
+                    // User-defined function
+                    else {
+
                     }
                 }
             } else {
