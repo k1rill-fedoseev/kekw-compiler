@@ -17,6 +17,7 @@ public class Interpreter {
 
         st.define(new Head());
         st.define(new Tail());
+        st.define(new Cons());
     }
 
     public IElement execute(IElement elem) {
@@ -56,8 +57,8 @@ public class Interpreter {
 
     private boolean checkNumberOfArguments(Func f, ElementsList list){
         // list contains f as a first element
-        if (list.size() - 1 < f.getArgs().size()) {
-            // not enough args
+        if (list.size() - 1 != f.getArgs().size()) {
+            // number of arguments does not match
             // handle error
             return false;
         } else {
