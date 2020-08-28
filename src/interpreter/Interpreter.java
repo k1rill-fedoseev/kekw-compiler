@@ -46,7 +46,8 @@ public class Interpreter {
                 return elem;
             }
         } else if (elem instanceof Setq){
-            st.define((Setq) elem);
+            Setq sq = (Setq) elem;
+            st.define(sq.getName(), execute(sq.getV()));
         } else if (elem instanceof Atom) {
             return st.lookup(((Atom) elem).v);
         } else {

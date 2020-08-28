@@ -20,6 +20,10 @@ public class SymbolTable {
         table.put(s.getName(), s.getV());
     }
 
+    public void define(String s, IElement e) {
+        table.put(s, e);
+    }
+
     public IElement lookup(String name) {
         return table.get(name);
     }
