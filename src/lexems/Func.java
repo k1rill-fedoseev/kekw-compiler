@@ -22,15 +22,6 @@ public class Func implements IElement {
                 '}';
     }
 
-    public IElement execute(List<IElement> argValues) {
-        if (args.size() != argValues.size()){
-            // error
-        } else {
-            // exec function
-        }
-        return null;
-    }
-
     public String getName() {
         return id.v;
     }

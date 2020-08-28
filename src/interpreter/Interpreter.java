@@ -1,6 +1,7 @@
 package interpreter;
 
 import lexems.*;
+import lexems.builtin.*;
 
 import java.util.List;
 
@@ -28,12 +29,14 @@ public class Interpreter {
                 if (lookupVal instanceof Func) {
                     Func f = (Func) lookupVal;
                     List<IElement> args;
-                    if (checkNumberOfArguments(f, list)){
-                        args = list.subList(1, 1 + f.getArgs().size());
-                        for (int i = 0; i < args.size(); i++) {
-                            args.set(i, execute(args.get(i)));
+                    if (f instanceof IBuiltin) {
+                        if (checkNumberOfArguments(f, list)) {
+                            args = list.subList(1, 1 + f.getArgs().size());
+                            for (int i = 0; i < args.size(); i++) {
+                                args.set(i, execute(args.get(i)));
+                            }
+                            return ((IBuiltin) f).execute(args);
                         }
-                        return f.execute(args);
                     }
                 }
             } else {

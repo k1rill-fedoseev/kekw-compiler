@@ -1,11 +1,13 @@
-package lexems;
+package lexems.builtin;
+
+import lexems.*;
 
 import java.util.List;
 
-public class Divide extends Func {
-    public Divide() {
+public class Times extends Func implements IBuiltin {
+    public Times() {
         super(
-                new Atom("divide"),
+                new Atom("times"),
                 List.of(new Atom("n1"), new Atom("n2")),
                 new ElementsList()
         );
@@ -21,16 +23,16 @@ public class Divide extends Func {
         IElement s = argValues.get(1);
 
         if (f instanceof IntegerLiteral && s instanceof IntegerLiteral) {
-            return new RealLiteral(((double) ((IntegerLiteral) f).v) / ((IntegerLiteral) s).v);
+            return new IntegerLiteral(((IntegerLiteral) f).v * ((IntegerLiteral) s).v);
         }
         else if (f instanceof IntegerLiteral && s instanceof RealLiteral) {
-            return new RealLiteral(((IntegerLiteral) f).v / ((RealLiteral) s).v);
+            return new RealLiteral(((IntegerLiteral) f).v * ((RealLiteral) s).v);
         }
         else if (f instanceof RealLiteral && s instanceof IntegerLiteral) {
-            return new RealLiteral(((RealLiteral) f).v / ((IntegerLiteral) s).v);
+            return new RealLiteral(((RealLiteral) f).v * ((IntegerLiteral) s).v);
         }
         else if (f instanceof RealLiteral && s instanceof RealLiteral) {
-            return new RealLiteral(((RealLiteral) f).v / ((RealLiteral) s).v);
+            return new RealLiteral(((RealLiteral) f).v * ((RealLiteral) s).v);
         } else {
             //error
             return null;

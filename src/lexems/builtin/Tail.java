@@ -1,11 +1,16 @@
-package lexems;
+package lexems.builtin;
+
+import lexems.Atom;
+import lexems.ElementsList;
+import lexems.Func;
+import lexems.IElement;
 
 import java.util.List;
 
-public class Head extends Func {
-    public Head() {
+public class Tail extends Func implements IBuiltin {
+    public Tail() {
         super(
-                new Atom("head"),
+                new Atom("tail"),
                 List.of(new Atom("list")),
                 new ElementsList()
         );
@@ -20,7 +25,8 @@ public class Head extends Func {
         IElement f = argValues.get(0);
 
         if (f instanceof ElementsList) {
-            return ((ElementsList) f).getFirst();
+            ElementsList list = (ElementsList) f;
+            return new ElementsList(list.subList(1, list.size()));
         } else {
             return null;
         }
