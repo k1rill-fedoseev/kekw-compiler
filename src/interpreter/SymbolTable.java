@@ -4,11 +4,16 @@ import java.util.HashMap;
 import lexems.*;
 
 public class SymbolTable {
+    private SymbolTable parent;
     private final HashMap<String, IElement> table;
 
     public SymbolTable() {
         table = new HashMap<>();
+    }
 
+    public SymbolTable(SymbolTable p) {
+        parent = p;
+        table = new HashMap<>();
     }
 
     // TODO: check existance of an identifier
@@ -25,6 +30,10 @@ public class SymbolTable {
     }
 
     public IElement lookup(String name) {
-        return table.get(name);
+        IElement e = table.get(name);
+        while (parent != null && e == null) {
+            e = parent.lookup(name);
+        }
+        return e;
     }
 }

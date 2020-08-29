@@ -22,11 +22,9 @@ public class Func implements IElement {
                 '}';
     }
 
-    public String getName() {
-        return id.v;
-    }
+    public String getName() { return id.v; }
 
-    public List<Atom> getArgs() {
-        return args;
-    }
+    public List<Atom> getArgs() { return args; }
+
+    public IElement getV() { return v; }
 }

@@ -6,40 +6,55 @@ import lexems.builtin.*;
 import java.util.List;
 
 public class Interpreter {
-    private final SymbolTable st;
+    private final SymbolTable globalScope;
 
-    public Interpreter(SymbolTable globalScope) {
-        st = globalScope;
-        st.define(new Plus());
-        st.define(new Minus());
-        st.define(new Times());
-        st.define(new Divide());
+    public Interpreter() {
+        globalScope = new SymbolTable();
+        globalScope.define(new Plus());
+        globalScope.define(new Minus());
+        globalScope.define(new Times());
+        globalScope.define(new Divide());
 
-        st.define(new Head());
-        st.define(new Tail());
-        st.define(new Cons());
+        globalScope.define(new Head());
+        globalScope.define(new Tail());
+        globalScope.define(new Cons());
     }
 
     public IElement execute(IElement elem) {
+        return execute(elem, globalScope);
+    }
+
+    public IElement execute(IElement elem, SymbolTable scope) {
         if (elem instanceof ElementsList){
             ElementsList list = (ElementsList) elem;
             // Evaluate each element of the list
             for (int i = 0; i < list.size(); i++) {
-                list.set(i, execute(list.get(i)));
+                list.set(i, execute(list.get(i), scope));
             }
             IElement first = list.getFirst();
             if (first instanceof Func) {
                 Func f = (Func) first;
-                List<IElement> args;
+                List<IElement> argValues;
                 if (checkNumberOfArguments(f, list)) {
-                    args = list.subList(1, 1 + f.getArgs().size());
+                    argValues = list.subList(1, 1 + f.getArgs().size());
                     // Builtin function
                     if (f instanceof IBuiltin) {
-                        return ((IBuiltin) f).execute(args);
+                        return ((IBuiltin) f).execute(argValues);
                     }
                     // User-defined function
                     else {
+                        // Create function local scope
+                        // Define current scope as a parent
+                        SymbolTable localScope = new SymbolTable(scope);
 
+                        // Fill local scope with provided values
+                        List<Atom> argNames = f.getArgs();
+                        for (int i = 0; i < argNames.size(); i++) {
+                            localScope.define(argNames.get(i).getV(), argValues.get(i));
+                        }
+
+                        // Execute function
+                        return execute(f.getV(), localScope);
                     }
                 }
             } else {
@@ -47,9 +62,11 @@ public class Interpreter {
             }
         } else if (elem instanceof Setq){
             Setq sq = (Setq) elem;
-            st.define(sq.getName(), execute(sq.getV()));
+            scope.define(sq.getName(), execute(sq.getV()));
         } else if (elem instanceof Atom) {
-            return st.lookup(((Atom) elem).v);
+            return scope.lookup(((Atom) elem).v);
+        } else if (elem instanceof Func) {
+            scope.define((Func) elem);
         } else {
             return elem;
         }

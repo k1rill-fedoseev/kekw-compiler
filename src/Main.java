@@ -19,7 +19,7 @@ public class Main {
         }
         res.append("]");
         System.out.println(res.toString());
-        Interpreter interpreter = new Interpreter(new SymbolTable());
+        Interpreter interpreter = new Interpreter();
 
         for (IElement elem: ast) {
             System.out.println(interpreter.execute(elem));

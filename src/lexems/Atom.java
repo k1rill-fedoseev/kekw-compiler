@@ -17,4 +17,6 @@ public class Atom implements IElement {
                 "v='" + v + '\'' +
                 '}';
     }
+
+    public String getV() { return v; }
 }
