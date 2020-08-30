@@ -25,4 +25,16 @@ public class Cond implements IElement {
                 ", e=" + e +
                 '}';
     }
+
+    public IElement getV() {
+        return v;
+    }
+
+    public IElement getC() {
+        return c;
+    }
+
+    public IElement getE() {
+        return e;
+    }
 }

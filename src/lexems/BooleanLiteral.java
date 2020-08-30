@@ -7,12 +7,12 @@ public class BooleanLiteral implements IElement {
         this.v = v;
     }
 
-    public Object evaluate() { return v; }
-
     @Override
     public String toString() {
         return "BooleanLiteral{" +
                 "v=" + v +
                 '}';
     }
+
+    public boolean getV() { return v; }
 }

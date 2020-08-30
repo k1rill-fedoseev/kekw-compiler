@@ -67,6 +67,16 @@ public class Interpreter {
             return scope.lookup(((Atom) elem).v);
         } else if (elem instanceof Func) {
             scope.define((Func) elem);
+        } else if (elem instanceof Cond) {
+            Cond c = (Cond) elem;
+            // Evaluate condition result
+            IElement condition =  execute(c.getC(), scope);
+            if (condition instanceof BooleanLiteral) {
+                if (((BooleanLiteral) condition).getV())
+                    return execute(c.getV(), scope);
+                else
+                    return execute(c.getE(), scope);
+            }
         } else {
             return elem;
         }
