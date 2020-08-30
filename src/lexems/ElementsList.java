@@ -26,4 +26,8 @@ public class ElementsList extends LinkedList<IElement> implements IElement {
     public String toString() {
         return "ElementsList" + super.toString();
     }
+
+    public ElementsList clone() {
+        return (ElementsList) super.clone();
+    }
 }

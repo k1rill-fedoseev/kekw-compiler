@@ -4,10 +4,11 @@ import java.util.HashMap;
 import lexems.*;
 
 public class SymbolTable {
-    private SymbolTable parent;
+    private final SymbolTable parent;
     private final HashMap<String, IElement> table;
 
     public SymbolTable() {
+        parent = null;
         table = new HashMap<>();
     }
 
@@ -31,9 +32,15 @@ public class SymbolTable {
 
     public IElement lookup(String name) {
         IElement e = table.get(name);
-        while (parent != null && e == null) {
+        if (e == null && parent != null){
             e = parent.lookup(name);
         }
         return e;
+    }
+
+    public String toString() {
+        return "SymbolTable{" +
+                "table=" + table +
+                '}';
     }
 }
