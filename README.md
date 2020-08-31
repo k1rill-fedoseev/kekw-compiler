@@ -29,3 +29,15 @@ Both commands support `verbose` option for enhanced logging.
 ```shell script
 ./scripts/generate_parser.sh
 ```
+
+
+## Extension of specification
+### Comments
+All symbols on the line after the symbol *#* will be ignored by the interpreter.
+### String
+String is any sequence of characters enclosed in double quotes.
+### Print
+Built-in function that takes one argument. 
+The function prints the argument to the user terminal. 
+If the argument is a *Literal*, it prints the value of that literal.
+In any other case, it prints the representation of the lexem in AST.

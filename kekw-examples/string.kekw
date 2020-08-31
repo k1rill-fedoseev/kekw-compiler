@@ -1,2 +1,4 @@
 (setq s "Hello, world!")
-(print s)
+(print s) # Hello, world!
+
+"abc123\asd'%^*-=+"
