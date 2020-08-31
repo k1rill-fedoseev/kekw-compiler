@@ -23,6 +23,8 @@ public class Interpreter {
         globalScope.define(new Less());
 
         globalScope.define(new Isnull());
+
+        globalScope.define(new Print());
     }
 
     public IElement execute(IElement elem) {
