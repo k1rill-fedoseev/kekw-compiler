@@ -80,7 +80,7 @@ public class Interpreter {
             // Evaluate condition result
             IElement condition =  execute(c.getC(), scope);
             if (condition instanceof BooleanLiteral) {
-                if (((BooleanLiteral) condition).getV())
+                if (((BooleanLiteral) condition).v)
                     return execute(c.getV(), scope);
                 else
                     return execute(c.getE(), scope);

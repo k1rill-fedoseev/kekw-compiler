@@ -1,3 +1,6 @@
 (setq x 5)
 (print x) # 5
 (print (1 2 3)) # (1 2 3)
+
+(func a () 1)
+(print a)

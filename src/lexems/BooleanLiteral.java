@@ -1,7 +1,7 @@
 package lexems;
 
 public class BooleanLiteral implements IElement {
-    private final boolean v;
+    public final boolean v;
 
     public BooleanLiteral(boolean v) {
         this.v = v;
@@ -13,6 +13,4 @@ public class BooleanLiteral implements IElement {
                 "v=" + v +
                 '}';
     }
-
-    public boolean getV() { return v; }
 }
