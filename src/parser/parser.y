@@ -39,6 +39,7 @@ import lexems.*;
 %token <IntegerLiteral> INTEGER
 %token <RealLiteral>    REAL
 %token <BooleanLiteral> BOOLEAN
+%token <StringLiteral>  STRING
 %token <Atom>           ATOM
 
 %token LPAREN       "("
@@ -84,6 +85,7 @@ literal:
   INTEGER { $$ = $1; }
 | REAL    { $$ = $1; }
 | BOOLEAN { $$ = $1; }
+| STRING  { $$ = $1; }
 ;
 
 list:

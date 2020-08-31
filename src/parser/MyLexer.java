@@ -36,6 +36,7 @@ class MyLexer implements Parser.Lexer {
         st.wordChars('_', '_');
         st.wordChars('.', '.');
         st.commentChar('#');
+        st.quoteChar('\"');
         st.ordinaryChar('(');
         st.ordinaryChar(')');
         st.ordinaryChar('\'');
@@ -87,11 +88,13 @@ class MyLexer implements Parser.Lexer {
         lastTokenStart.set(reader.getPosition());
         int ttype = st.nextToken();
         lastTokenEnd.set(reader.getPosition());
+
+        String v = st.sval;
+
         switch (ttype) {
             case StreamTokenizer.TT_EOF:
                 return YYEOF;
             case StreamTokenizer.TT_WORD:
-                String v = st.sval;
                 lastTokenEnd.set(reader.getPreviousPosition());
                 if (INTEGER_PATTERN.matcher(v).matches()) {
                     lastToken = new IntegerLiteral(Integer.parseInt(v));
@@ -137,6 +140,10 @@ class MyLexer implements Parser.Lexer {
                 return RPAREN;
             case '\'':
                 return QUOTE_SYMBOL;
+            case '\"':
+                lastToken = new StringLiteral(v);
+                System.out.println(lastToken);
+                return STRING;
             default:
                 lastToken = new BadToken(String.valueOf(ttype));
                 return YYUNDEF;
