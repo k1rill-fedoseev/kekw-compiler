@@ -20,6 +20,9 @@ public class Interpreter {
         globalScope.define(new Cons());
 
         globalScope.define(new Greater());
+        globalScope.define(new Less());
+
+        globalScope.define(new Isnull());
     }
 
     public IElement execute(IElement elem) {
@@ -29,6 +32,7 @@ public class Interpreter {
     public IElement execute(IElement elem, SymbolTable scope) {
         if (elem instanceof ElementsList){
             ElementsList list = ((ElementsList) elem).clone();
+            if (list.isEmpty()) return list;
             // Evaluate each element of the list
             for (int i = 0; i < list.size(); i++) {
                 list.set(i, execute(list.get(i), scope));
