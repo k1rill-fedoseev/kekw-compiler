@@ -1,5 +1,4 @@
 import interpreter.Interpreter;
-import interpreter.SymbolTable;
 import lexems.ElementsList;
 import lexems.IElement;
 import parser.Parser;
