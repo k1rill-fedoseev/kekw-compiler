@@ -17,7 +17,7 @@ public class SymbolTable {
         table = new HashMap<>();
     }
 
-    // TODO: check existance of an identifier
+    // TODO: check existence of an identifier
     public void define(Func f) {
         table.put(f.getName(), f);
     }

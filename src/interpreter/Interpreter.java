@@ -21,6 +21,8 @@ public class Interpreter {
 
         globalScope.define(new Greater());
         globalScope.define(new Less());
+        globalScope.define(new Equal());
+        globalScope.define(new Not());
 
         globalScope.define(new Isnull());
 
