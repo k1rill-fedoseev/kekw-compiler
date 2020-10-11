@@ -1,6 +1,7 @@
-package lexems.builtin;
+package lexems.builtin.comp;
 
 import lexems.*;
+import lexems.builtin.IBuiltin;
 
 import java.util.List;
 

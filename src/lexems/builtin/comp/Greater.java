@@ -1,13 +1,14 @@
-package lexems.builtin;
+package lexems.builtin.comp;
 
 import lexems.*;
+import lexems.builtin.IBuiltin;
 
 import java.util.List;
 
-public class Nonequal extends Func implements IBuiltin {
-    public Nonequal() {
+public class Greater extends Func implements IBuiltin {
+    public Greater() {
         super(
-                new Atom("nonequal"),
+                new Atom("greater"),
                 List.of(new Atom("n1"), new Atom("n2")),
                 new ElementsList()
         );
@@ -23,16 +24,16 @@ public class Nonequal extends Func implements IBuiltin {
         IElement s = argValues.get(1);
 
         if (f instanceof IntegerLiteral && s instanceof IntegerLiteral) {
-            return new BooleanLiteral(((IntegerLiteral) f).v != ((IntegerLiteral) s).v);
+            return new BooleanLiteral(((IntegerLiteral) f).v > ((IntegerLiteral) s).v);
         }
         else if (f instanceof IntegerLiteral && s instanceof RealLiteral) {
-            return new BooleanLiteral(((IntegerLiteral) f).v != ((RealLiteral) s).v);
+            return new BooleanLiteral(((IntegerLiteral) f).v > ((RealLiteral) s).v);
         }
         else if (f instanceof RealLiteral && s instanceof IntegerLiteral) {
-            return new BooleanLiteral(((RealLiteral) f).v != ((IntegerLiteral) s).v);
+            return new BooleanLiteral(((RealLiteral) f).v > ((IntegerLiteral) s).v);
         }
         else if (f instanceof RealLiteral && s instanceof RealLiteral) {
-            return new BooleanLiteral(((RealLiteral) f).v != ((RealLiteral) s).v);
+            return new BooleanLiteral(((RealLiteral) f).v > ((RealLiteral) s).v);
         } else {
             //error
             return null;

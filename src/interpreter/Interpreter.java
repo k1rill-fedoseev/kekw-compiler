@@ -2,6 +2,8 @@ package interpreter;
 
 import lexems.*;
 import lexems.builtin.*;
+import lexems.builtin.comp.*;
+import lexems.builtin.predicates.*;
 
 import java.util.List;
 
@@ -19,12 +21,22 @@ public class Interpreter {
         globalScope.define(new Tail());
         globalScope.define(new Cons());
 
+        // Comp
         globalScope.define(new Greater());
+        globalScope.define(new Greatereq());
         globalScope.define(new Less());
+        globalScope.define(new Lesseq());
         globalScope.define(new Equal());
+        globalScope.define(new Nonequal());
         globalScope.define(new Not());
 
+        // Predicates
+        globalScope.define(new Isint());
+        globalScope.define(new Isreal());
+        globalScope.define(new Isbool());
         globalScope.define(new Isnull());
+        globalScope.define(new Isatom());
+        globalScope.define(new Islist());
 
         globalScope.define(new Print());
     }

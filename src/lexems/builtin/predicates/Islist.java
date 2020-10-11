@@ -1,13 +1,14 @@
-package lexems.builtin;
+package lexems.builtin.predicates;
 
 import lexems.*;
+import lexems.builtin.IBuiltin;
 
 import java.util.List;
 
-public class Isnull extends Func implements IBuiltin {
-    public Isnull() {
+public class Islist extends Func implements IBuiltin {
+    public Islist() {
         super(
-                new Atom("isnull"),
+                new Atom("islist"),
                 List.of(new Atom("n1")),
                 new ElementsList()
         );
@@ -21,13 +22,9 @@ public class Isnull extends Func implements IBuiltin {
 
         IElement f = argValues.get(0);
 
-//        System.out.println(f);
-
-        if (f instanceof ElementsList) {
-            return new BooleanLiteral(((ElementsList) f).isEmpty());
-        } else {
-            return null;
-        }
-
+        if (f instanceof ElementsList)
+            return new BooleanLiteral(true);
+        else
+            return new BooleanLiteral(false);
     }
 }

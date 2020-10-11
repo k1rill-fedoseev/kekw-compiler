@@ -2,8 +2,8 @@
 (setq a 1)
 
 (isint 1) # true
-(isatom a) # true
-(isint a) # false
+(isatom a) # false
+(isint a) # true
 (isatom 1) # false
 
 (setq b 1.234)
