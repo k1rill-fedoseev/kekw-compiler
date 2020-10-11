@@ -11,35 +11,3 @@
 ))
 
 (filter 'islist ((1 2 3) 4 ()) ())
-
-ElementsList[
-  Func{
-    id=Atom{v='filter'},
-    args=[Atom{v='predicate'}, Atom{v='arr'}, Atom{v='acc'}],
-    v=Cond{
-      c=ElementsList[Atom{v='isnull'}, Atom{v='arr'}],
-      v=ElementsList[],
-      e=ElementsList[
-        Atom{v='filter'},
-        Atom{v='predicate'},
-        ElementsList[Atom{v='tail'}, Atom{v='arr'}],
-        Cond{
-          c=ElementsList[Atom{v='predicate'}, ElementsList[Atom{v='head'}, Atom{v='arr'}]],
-          v=ElementsList[Atom{v='cons'}, ElementsList[Atom{v='head'}, Atom{v='arr'}], Atom{v='acc'}],
-          e=Atom{v='acc'}
-        }
-      ]
-    }
-  },
-  ...
-  ElementsList[
-    Atom{v='filter'},
-    Quote{v=Atom{v='islist'}},
-    ElementsList[
-      ElementsList[IntegerLiteral{v=1}, IntegerLiteral{v=2}, IntegerLiteral{v=3}],
-      IntegerLiteral{v=4},
-      ElementsList[]
-    ],
-    ElementsList[]
-  ],
-]
