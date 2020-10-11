@@ -2,6 +2,10 @@ package interpreter;
 
 import lexems.*;
 import lexems.builtin.*;
+import lexems.builtin.arithmetic.Divide;
+import lexems.builtin.arithmetic.Minus;
+import lexems.builtin.arithmetic.Plus;
+import lexems.builtin.arithmetic.Times;
 import lexems.builtin.comp.*;
 import lexems.builtin.predicates.*;
 
