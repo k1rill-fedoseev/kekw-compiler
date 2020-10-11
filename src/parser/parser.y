@@ -56,15 +56,15 @@ import lexems.*;
 %token <Return>         RETURN
 %token <Break>          BREAK
 
-%type <ElementsList>     program
-%type <IElement>         element
-%type <Atom>             identifier
-%type <IElement>         literal
-%type <IElement>         list
-%type <ElementsList>     list_elements
-%type <IElement>         special_form
-%type <LinkedList<Atom>> list_of_atoms
-%type <LinkedList<Atom>> atoms_sequence
+%type <ElementsList>     program        // (...) (...) (...)
+%type <IElement>         element        // (...) | 123.45 | atom
+%type <Atom>             identifier     // atom
+%type <IElement>         literal        // 123 | 123.45 | true | "hello world"
+%type <IElement>         list           // (... ... ...)
+%type <ElementsList>     list_elements  // ... ... ...
+%type <IElement>         special_form   // setq x 5 | func makeList (A) (A)
+%type <LinkedList<Atom>> list_of_atoms  // (a b c ...)
+%type <LinkedList<Atom>> atoms_sequence // a b c ...
 
 
 %%

@@ -1,5 +1,8 @@
 package lexems.builtin.arithmetic;
 
+import exceptions.InterpreterException;
+import exceptions.InvalidArgumentTypesException;
+import exceptions.InvalidNumberOfArgumentsException;
 import lexems.*;
 import lexems.builtin.IBuiltin;
 
@@ -14,10 +17,9 @@ public class Plus extends Func implements IBuiltin {
         );
     }
 
-    public IElement execute(List<IElement> argValues) {
+    public IElement execute(List<IElement> argValues) throws InterpreterException {
         if (argValues.size() != 2){
-            // error
-            return null;
+            throw new InvalidNumberOfArgumentsException(argValues.size(), 2);
         }
 
         IElement f = argValues.get(0);
@@ -35,8 +37,7 @@ public class Plus extends Func implements IBuiltin {
         else if (f instanceof RealLiteral && s instanceof RealLiteral) {
             return new RealLiteral(((RealLiteral) f).v + ((RealLiteral) s).v);
         } else {
-            //error
-            return null;
+            throw new InvalidArgumentTypesException();
         }
     }
 }

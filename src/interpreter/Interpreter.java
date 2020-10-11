@@ -1,5 +1,6 @@
 package interpreter;
 
+import exceptions.InterpreterException;
 import lexems.*;
 import lexems.builtin.*;
 import lexems.builtin.arithmetic.Divide;
@@ -10,12 +11,18 @@ import lexems.builtin.comp.*;
 import lexems.builtin.logic.*;
 import lexems.builtin.predicates.*;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 public class Interpreter {
     private final SymbolTable globalScope;
 
+    private final Stack<StackTraceElement> stackTrace;
+
     public Interpreter() {
+        stackTrace = new Stack<>();
+
         globalScope = new SymbolTable();
         globalScope.define(new Plus());
         globalScope.define(new Minus());
@@ -51,48 +58,58 @@ public class Interpreter {
         globalScope.define(new Print());
     }
 
-    public IElement execute(IElement elem) {
+    public StackTraceElement[] getStackTrace() {
+        StackTraceElement[] res = new StackTraceElement[this.stackTrace.size()];
+        return this.stackTrace.toArray(res);
+    }
+
+    public IElement execute(IElement elem) throws InterpreterException {
         return execute(elem, globalScope);
     }
 
-    public IElement execute(IElement elem, SymbolTable scope) {
-        if (elem instanceof ElementsList){
+    public IElement execute(IElement elem, SymbolTable scope) throws InterpreterException {
+        if (elem instanceof ElementsList) {
             ElementsList list = ((ElementsList) elem).clone();
             if (list.isEmpty()) return list;
             // Evaluate each element of the list
-            for (int i = 0; i < list.size(); i++) {
-                list.set(i, execute(list.get(i), scope));
-            }
+            list.set(0, execute(list.getFirst(), scope));
             IElement first = list.getFirst();
             if (first instanceof Func) {
+                stackTrace.add(new StackTraceElement("", ((Func) first).getName(), "", 1));
+            }
+            for (int i = 1; i < list.size(); i++) {
+                list.set(i, execute(list.get(i), scope));
+            }
+            if (first instanceof Func) {
                 Func f = (Func) first;
-                List<IElement> argValues;
-                if (checkNumberOfArguments(f, list)) {
-                    argValues = list.subList(1, 1 + f.getArgs().size());
-                    // Builtin function
-                    if (f instanceof IBuiltin) {
-                        return ((IBuiltin) f).execute(argValues);
-                    }
-                    // User-defined function
-                    else {
-                        // Create function local scope
-                        // Define current scope as a parent
-                        SymbolTable localScope = new SymbolTable(scope);
+                list.removeFirst();
+                // Builtin function
+                if (f instanceof IBuiltin) {
+                    IElement result = ((IBuiltin) f).execute(list);
+                    stackTrace.pop();
+                    return result;
+                }
+                // User-defined function
+                else {
+                    // Create function local scope
+                    // Define current scope as a parent
+                    SymbolTable localScope = new SymbolTable(scope);
 
-                        // Fill local scope with provided values
-                        List<Atom> argNames = f.getArgs();
-                        for (int i = 0; i < argNames.size(); i++) {
-                            localScope.define(argNames.get(i).getV(), argValues.get(i));
-                        }
-
-                        // Execute function
-                        return execute(f.getV(), localScope);
+                    // Fill local scope with provided values
+                    List<Atom> argNames = f.getArgs();
+                    for (int i = 0; i < argNames.size(); i++) {
+                        localScope.define(argNames.get(i).getV(), list.get(i));
                     }
+
+                    // Execute function
+                    IElement result = execute(f.getV(), localScope);
+                    stackTrace.pop();
+                    return result;
                 }
             } else {
                 return elem;
             }
-        } else if (elem instanceof Setq){
+        } else if (elem instanceof Setq) {
             Setq sq = (Setq) elem;
             scope.define(sq.getName(), execute(sq.getV()));
         } else if (elem instanceof Atom) {
@@ -102,7 +119,7 @@ public class Interpreter {
         } else if (elem instanceof Cond) {
             Cond c = (Cond) elem;
             // Evaluate condition result
-            IElement condition =  execute(c.getC(), scope);
+            IElement condition = execute(c.getC(), scope);
             if (condition instanceof BooleanLiteral) {
                 if (((BooleanLiteral) condition).v)
                     return execute(c.getV(), scope);
@@ -114,16 +131,4 @@ public class Interpreter {
         }
         return null;
     }
-
-    private boolean checkNumberOfArguments(Func f, ElementsList list){
-        // list contains f as a first element
-        if (list.size() - 1 != f.getArgs().size()) {
-            // number of arguments does not match
-            // handle error
-            return false;
-        } else {
-            return true;
-        }
-    }
-
 }
