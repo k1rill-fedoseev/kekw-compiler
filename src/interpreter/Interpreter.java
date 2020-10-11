@@ -3,10 +3,8 @@ package interpreter;
 import exceptions.InterpreterException;
 import lexems.*;
 import lexems.builtin.*;
-import lexems.builtin.arithmetic.Divide;
-import lexems.builtin.arithmetic.Minus;
-import lexems.builtin.arithmetic.Plus;
-import lexems.builtin.arithmetic.Times;
+import lexems.builtin.Quote;
+import lexems.builtin.arithmetic.*;
 import lexems.builtin.comp.*;
 import lexems.builtin.logic.*;
 import lexems.builtin.predicates.*;
@@ -54,6 +52,8 @@ public class Interpreter {
         globalScope.define(new Isnull());
         globalScope.define(new Isatom());
         globalScope.define(new Islist());
+
+        globalScope.define(new Quote());
 
         globalScope.define(new Print());
     }
