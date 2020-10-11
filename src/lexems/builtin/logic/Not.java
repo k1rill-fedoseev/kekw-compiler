@@ -1,4 +1,4 @@
-package lexems.builtin.comp;
+package lexems.builtin.logic;
 
 import lexems.*;
 import lexems.builtin.IBuiltin;
@@ -23,7 +23,7 @@ public class Not extends Func implements IBuiltin {
         IElement f = argValues.get(0);
 
         if (f instanceof BooleanLiteral) {
-            return new BooleanLiteral(!(((BooleanLiteral) f).v));
+            return new BooleanLiteral(!((BooleanLiteral) f).v);
         } else {
             //error
             return null;

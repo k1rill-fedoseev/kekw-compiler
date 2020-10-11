@@ -7,6 +7,7 @@ import lexems.builtin.arithmetic.Minus;
 import lexems.builtin.arithmetic.Plus;
 import lexems.builtin.arithmetic.Times;
 import lexems.builtin.comp.*;
+import lexems.builtin.logic.*;
 import lexems.builtin.predicates.*;
 
 import java.util.List;
@@ -32,7 +33,12 @@ public class Interpreter {
         globalScope.define(new Lesseq());
         globalScope.define(new Equal());
         globalScope.define(new Nonequal());
+
+        //Logic
         globalScope.define(new Not());
+        globalScope.define(new And());
+        globalScope.define(new Or());
+        globalScope.define(new Xor());
 
         // Predicates
         globalScope.define(new Isint());
