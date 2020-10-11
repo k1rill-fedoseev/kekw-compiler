@@ -2,29 +2,22 @@ package lexems;
 
 import java.util.List;
 
-public class Func implements IElement {
+public class Func extends Lambda implements IElement {
     private final Atom id;
-    private final List<Atom> args;
-    private final IElement v;
 
     public Func(Atom id, List<Atom> args, IElement v) {
+        super(args, v);
         this.id = id;
-        this.args = args;
-        this.v = v;
     }
 
     @Override
     public String toString() {
         return "Func{" +
                 "id=" + id +
-                ", args=" + args +
-                ", v=" + v +
+                ", args=" + getArgs() +
+                ", v=" + getV() +
                 '}';
     }
 
     public String getName() { return id.v; }
-
-    public List<Atom> getArgs() { return args; }
-
-    public IElement getV() { return v; }
 }

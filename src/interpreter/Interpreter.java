@@ -74,23 +74,24 @@ public class Interpreter {
             // Evaluate each element of the list
             list.set(0, execute(list.getFirst(), scope));
             IElement first = list.getFirst();
-            if (first instanceof Func) {
-                stackTrace.add(new StackTraceElement("", ((Func) first).getName(), "", 1));
+            if (first instanceof Lambda) {
+                stackTrace.add(new StackTraceElement("", ((Lambda) first).getName(), "", 1));
             }
             for (int i = 1; i < list.size(); i++) {
                 list.set(i, execute(list.get(i), scope));
             }
-            if (first instanceof Func) {
-                Func f = (Func) first;
+            if (first instanceof Lambda) {
+                Lambda f = (Lambda) first;
+
                 list.removeFirst();
                 // Builtin function
                 if (f instanceof IBuiltin) {
                     IElement result = ((IBuiltin) f).execute(list);
                     stackTrace.pop();
                     return result;
-                }
-                // User-defined function
-                else {
+                } else {
+                    // User-defined function
+
                     // Create function local scope
                     // Define current scope as a parent
                     SymbolTable localScope = new SymbolTable(scope);

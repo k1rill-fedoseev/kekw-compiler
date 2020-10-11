@@ -11,6 +11,10 @@ public class Lambda implements IElement {
         this.v = v;
     }
 
+    public List<Atom> getArgs() { return args; }
+    public IElement getV() { return v; }
+    public String getName() { return "Anonymous"; }
+
     @Override
     public String toString() {
         return "Lambda{" +
