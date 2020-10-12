@@ -13,12 +13,13 @@
 
 %code imports {
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.*;
 import lexems.*;
-}
+}s
 
 %code {
     private static ElementsList ast;
+    public static List<Integer> lines;
     public static ElementsList makeAST() throws IOException {
         MyLexer l = new MyLexer(System.in);
         Parser p = new parser.Parser(l);
@@ -69,8 +70,8 @@ import lexems.*;
 
 %%
 program:
-  %empty          { ast = new ElementsList();}
-| program element { ast.add($2); }
+  %empty          { ast = new ElementsList(); lines = new ArrayList<Integer>(); }
+| program element { ast.add($2); lines.add(@2.begin.line); }
 ;
 
 element:
@@ -101,8 +102,8 @@ list_elements:
 special_form:
   QUOTE element                         { $$ = new Quote($2); }
 | SETQ identifier element               { $$ = new Setq($2, $3); }
-| FUNC identifier list_of_atoms element { $$ = new Func($2, $3, $4); }
-| LAMBDA list_of_atoms element          { $$ = new Lambda($2, $3); }
+| FUNC identifier list_of_atoms element { $$ = new Func($2, $3, $4, @1.begin.line); }
+| LAMBDA list_of_atoms element          { $$ = new Lambda($2, $3, @1.begin.line); }
 | PROG list_of_atoms element            { $$ = new Prog($2, $3); }
 | COND element element                  { $$ = new Cond($2, $3); }
 | COND element element element          { $$ = new Cond($2, $3, $4); }

@@ -21,9 +21,12 @@ public class Main {
         // System.out.println(res.toString());
         Interpreter interpreter = new Interpreter();
 
+        int i = 0;
         for (IElement elem: ast) {
             try {
+                interpreter.stackTrace.add(new StackTraceElement("", "main", "", Parser.lines.get(i++)));
                 System.out.println(interpreter.execute(elem));
+                interpreter.stackTrace.pop();
             } catch (InterpreterException e) {
                 e.setStackTrace(interpreter.getStackTrace());
                 throw e;

@@ -6,7 +6,12 @@ public class Func extends Lambda implements IElement {
     private final Atom id;
 
     public Func(Atom id, List<Atom> args, IElement v) {
-        super(args, v);
+        super(args, v, 0);
+        this.id = id;
+    }
+
+    public Func(Atom id, List<Atom> args, IElement v, int line) {
+        super(args, v, line);
         this.id = id;
     }
 

@@ -16,7 +16,7 @@ import java.util.Stack;
 public class Interpreter {
     private final SymbolTable globalScope;
 
-    private final Stack<StackTraceElement> stackTrace;
+    public final Stack<StackTraceElement> stackTrace;
 
     public Interpreter() {
         stackTrace = new Stack<>();
@@ -75,7 +75,7 @@ public class Interpreter {
             list.set(0, execute(list.getFirst(), scope));
             IElement first = list.getFirst();
             if (first instanceof Lambda) {
-                stackTrace.add(new StackTraceElement("", ((Lambda) first).getName(), "", 1));
+                stackTrace.add(new StackTraceElement("", ((Lambda) first).getName(), "", ((Lambda) first).getLine()));
             }
             for (int i = 1; i < list.size(); i++) {
                 list.set(i, execute(list.get(i), scope));

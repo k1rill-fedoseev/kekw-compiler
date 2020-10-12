@@ -43,7 +43,7 @@ import java.text.MessageFormat;
 /* "src/parser/parser.y":14  */
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.*;
 import lexems.*;
 
 /* "src/parser/Parser.java":50  */
@@ -555,189 +555,189 @@ public class Parser
       {
           case 2: /* program: %empty  */
   if (yyn == 2)
-    /* "src/parser/parser.y":72  */
-                  { ast = new ElementsList();};
+    /* "src/parser/parser.y":73  */
+                  { ast = new ElementsList(); lines = new ArrayList<Integer>(); };
   break;
 
 
   case 3: /* program: program element  */
   if (yyn == 3)
-    /* "src/parser/parser.y":73  */
-                  { ast.add(((IElement)(yystack.valueAt (0)))); };
+    /* "src/parser/parser.y":74  */
+                  { ast.add(((IElement)(yystack.valueAt (0)))); lines.add(yystack.locationAt (0).begin.line); };
   break;
 
 
   case 4: /* element: identifier  */
   if (yyn == 4)
-    /* "src/parser/parser.y":77  */
+    /* "src/parser/parser.y":78  */
               { yyval = ((Atom)(yystack.valueAt (0))); };
   break;
 
 
   case 5: /* element: literal  */
   if (yyn == 5)
-    /* "src/parser/parser.y":78  */
+    /* "src/parser/parser.y":79  */
               { yyval = ((IElement)(yystack.valueAt (0))); };
   break;
 
 
   case 6: /* element: list  */
   if (yyn == 6)
-    /* "src/parser/parser.y":79  */
+    /* "src/parser/parser.y":80  */
               { yyval = ((IElement)(yystack.valueAt (0))); };
   break;
 
 
   case 7: /* element: "'" element  */
   if (yyn == 7)
-    /* "src/parser/parser.y":80  */
+    /* "src/parser/parser.y":81  */
               { yyval = new Quote(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 9: /* literal: INTEGER  */
   if (yyn == 9)
-    /* "src/parser/parser.y":85  */
+    /* "src/parser/parser.y":86  */
           { yyval = ((IntegerLiteral)(yystack.valueAt (0))); };
   break;
 
 
   case 10: /* literal: REAL  */
   if (yyn == 10)
-    /* "src/parser/parser.y":86  */
+    /* "src/parser/parser.y":87  */
           { yyval = ((RealLiteral)(yystack.valueAt (0))); };
   break;
 
 
   case 11: /* literal: BOOLEAN  */
   if (yyn == 11)
-    /* "src/parser/parser.y":87  */
+    /* "src/parser/parser.y":88  */
           { yyval = ((BooleanLiteral)(yystack.valueAt (0))); };
   break;
 
 
   case 12: /* literal: STRING  */
   if (yyn == 12)
-    /* "src/parser/parser.y":88  */
+    /* "src/parser/parser.y":89  */
           { yyval = ((StringLiteral)(yystack.valueAt (0))); };
   break;
 
 
   case 13: /* list: "(" list_elements ")"  */
   if (yyn == 13)
-    /* "src/parser/parser.y":92  */
+    /* "src/parser/parser.y":93  */
                         { yyval = ((ElementsList)(yystack.valueAt (1))); };
   break;
 
 
   case 14: /* list: "(" special_form ")"  */
   if (yyn == 14)
-    /* "src/parser/parser.y":93  */
+    /* "src/parser/parser.y":94  */
                         { yyval = ((IElement)(yystack.valueAt (1))); };
   break;
 
 
   case 15: /* list_elements: %empty  */
   if (yyn == 15)
-    /* "src/parser/parser.y":97  */
+    /* "src/parser/parser.y":98  */
                         { yyval = new ElementsList(); };
   break;
 
 
   case 16: /* list_elements: list_elements element  */
   if (yyn == 16)
-    /* "src/parser/parser.y":98  */
+    /* "src/parser/parser.y":99  */
                         { yyval = ((ElementsList)(yystack.valueAt (1))); ((ElementsList)(yystack.valueAt (1))).add(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 17: /* special_form: QUOTE element  */
   if (yyn == 17)
-    /* "src/parser/parser.y":102  */
+    /* "src/parser/parser.y":103  */
                                         { yyval = new Quote(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 18: /* special_form: SETQ identifier element  */
   if (yyn == 18)
-    /* "src/parser/parser.y":103  */
+    /* "src/parser/parser.y":104  */
                                         { yyval = new Setq(((Atom)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 19: /* special_form: FUNC identifier list_of_atoms element  */
   if (yyn == 19)
-    /* "src/parser/parser.y":104  */
-                                        { yyval = new Func(((Atom)(yystack.valueAt (2))), ((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
+    /* "src/parser/parser.y":105  */
+                                        { yyval = new Func(((Atom)(yystack.valueAt (2))), ((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0))), yystack.locationAt (3).begin.line); };
   break;
 
 
   case 20: /* special_form: LAMBDA list_of_atoms element  */
   if (yyn == 20)
-    /* "src/parser/parser.y":105  */
-                                        { yyval = new Lambda(((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
+    /* "src/parser/parser.y":106  */
+                                        { yyval = new Lambda(((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0))), yystack.locationAt (2).begin.line); };
   break;
 
 
   case 21: /* special_form: PROG list_of_atoms element  */
   if (yyn == 21)
-    /* "src/parser/parser.y":106  */
+    /* "src/parser/parser.y":107  */
                                         { yyval = new Prog(((LinkedList<Atom>)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 22: /* special_form: COND element element  */
   if (yyn == 22)
-    /* "src/parser/parser.y":107  */
+    /* "src/parser/parser.y":108  */
                                         { yyval = new Cond(((IElement)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 23: /* special_form: COND element element element  */
   if (yyn == 23)
-    /* "src/parser/parser.y":108  */
+    /* "src/parser/parser.y":109  */
                                         { yyval = new Cond(((IElement)(yystack.valueAt (2))), ((IElement)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 24: /* special_form: WHILE element element  */
   if (yyn == 24)
-    /* "src/parser/parser.y":109  */
+    /* "src/parser/parser.y":110  */
                                         { yyval = new While(((IElement)(yystack.valueAt (1))), ((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 25: /* special_form: RETURN element  */
   if (yyn == 25)
-    /* "src/parser/parser.y":110  */
+    /* "src/parser/parser.y":111  */
                                         { yyval = new Return(((IElement)(yystack.valueAt (0)))); };
   break;
 
 
   case 26: /* special_form: BREAK  */
   if (yyn == 26)
-    /* "src/parser/parser.y":111  */
+    /* "src/parser/parser.y":112  */
                                         { yyval = new Break(); };
   break;
 
 
   case 27: /* list_of_atoms: "(" atoms_sequence ")"  */
   if (yyn == 27)
-    /* "src/parser/parser.y":114  */
+    /* "src/parser/parser.y":115  */
                                       { yyval = ((LinkedList<Atom>)(yystack.valueAt (1))); };
   break;
 
 
   case 28: /* atoms_sequence: %empty  */
   if (yyn == 28)
-    /* "src/parser/parser.y":117  */
+    /* "src/parser/parser.y":118  */
                             { yyval = new LinkedList<Atom>(); };
   break;
 
 
   case 29: /* atoms_sequence: atoms_sequence identifier  */
   if (yyn == 29)
-    /* "src/parser/parser.y":118  */
+    /* "src/parser/parser.y":119  */
                             { yyval = ((LinkedList<Atom>)(yystack.valueAt (1))); ((LinkedList<Atom>)(yystack.valueAt (1))).add(((Atom)(yystack.valueAt (0)))); };
   break;
 
@@ -1321,9 +1321,9 @@ private static final byte[] yycheck_ = yycheck_init();
   {
     return new byte[]
     {
-       0,    72,    72,    73,    77,    78,    79,    80,    83,    85,
-      86,    87,    88,    92,    93,    97,    98,   102,   103,   104,
-     105,   106,   107,   108,   109,   110,   111,   114,   117,   118
+       0,    73,    73,    74,    78,    79,    80,    81,    84,    86,
+      87,    88,    89,    93,    94,    98,    99,   103,   104,   105,
+     106,   107,   108,   109,   110,   111,   112,   115,   118,   119
     };
   }
 
@@ -1407,6 +1407,7 @@ private static final byte[] yycheck_ = yycheck_init();
 /* "src/parser/parser.y":20  */
 
     private static ElementsList ast;
+    public static List<Integer> lines;
     public static ElementsList makeAST() throws IOException {
         MyLexer l = new MyLexer(System.in);
         Parser p = new parser.Parser(l);
@@ -1423,8 +1424,8 @@ private static final byte[] yycheck_ = yycheck_init();
         return ast;
     }
 
-/* "src/parser/Parser.java":1427  */
+/* "src/parser/Parser.java":1428  */
 
 }
-/* "src/parser/parser.y":120  */
+/* "src/parser/parser.y":121  */
 
