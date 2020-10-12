@@ -15,7 +15,7 @@
 import java.io.IOException;
 import java.util.*;
 import lexems.*;
-}s
+}
 
 %code {
     private static ElementsList ast;

@@ -1,5 +1,6 @@
 package lexems.builtin;
 
+import exceptions.InvalidNumberOfArgumentsException;
 import lexems.*;
 
 import java.util.List;
@@ -13,10 +14,9 @@ public class Print extends Func implements IBuiltin {
         );
     }
 
-    public IElement execute(List<IElement> argValues) {
-        if (argValues.size() != 1) {
-            // error
-            return null;
+    public IElement execute(List<IElement> argValues) throws InvalidNumberOfArgumentsException {
+        if (argValues.size() != 1){
+            throw new InvalidNumberOfArgumentsException(argValues.size(), 1);
         }
 
         IElement s = argValues.get(0);

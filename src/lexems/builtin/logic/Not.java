@@ -1,5 +1,8 @@
 package lexems.builtin.logic;
 
+import exceptions.InterpreterException;
+import exceptions.InvalidArgumentTypesException;
+import exceptions.InvalidNumberOfArgumentsException;
 import lexems.*;
 import lexems.builtin.IBuiltin;
 
@@ -14,10 +17,9 @@ public class Not extends Func implements IBuiltin {
         );
     }
 
-    public lexems.IElement execute(List<IElement> argValues) {
+    public lexems.IElement execute(List<IElement> argValues) throws InterpreterException {
         if (argValues.size() != 1){
-            // error
-            return null;
+            throw new InvalidNumberOfArgumentsException(argValues.size(), 1);
         }
 
         IElement f = argValues.get(0);
@@ -25,8 +27,7 @@ public class Not extends Func implements IBuiltin {
         if (f instanceof BooleanLiteral) {
             return new BooleanLiteral(!((BooleanLiteral) f).v);
         } else {
-            //error
-            return null;
+            throw new InvalidArgumentTypesException();
         }
     }
 }

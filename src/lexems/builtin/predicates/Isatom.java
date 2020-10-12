@@ -1,5 +1,6 @@
 package lexems.builtin.predicates;
 
+import exceptions.InvalidNumberOfArgumentsException;
 import lexems.*;
 import lexems.builtin.IBuiltin;
 
@@ -14,10 +15,9 @@ public class Isatom extends Func implements IBuiltin {
         );
     }
 
-    public IElement execute(List<IElement> argValues) {
+    public IElement execute(List<IElement> argValues) throws InvalidNumberOfArgumentsException {
         if (argValues.size() != 1){
-            // error
-            return null;
+            throw new InvalidNumberOfArgumentsException(argValues.size(), 1);
         }
 
         IElement f = argValues.get(0);

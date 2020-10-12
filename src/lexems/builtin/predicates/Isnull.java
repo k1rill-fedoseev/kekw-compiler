@@ -1,5 +1,6 @@
 package lexems.builtin.predicates;
 
+import exceptions.InvalidNumberOfArgumentsException;
 import lexems.*;
 import lexems.builtin.IBuiltin;
 
@@ -14,21 +15,16 @@ public class Isnull extends Func implements IBuiltin {
         );
     }
 
-    public IElement execute(List<IElement> argValues) {
+    public IElement execute(List<IElement> argValues) throws InvalidNumberOfArgumentsException {
         if (argValues.size() != 1){
-            // error
-            return null;
+            throw new InvalidNumberOfArgumentsException(argValues.size(), 1);
         }
 
         IElement f = argValues.get(0);
 
-//        System.out.println(f);
-
-        if (f instanceof ElementsList) {
+        if (f instanceof ElementsList)
             return new BooleanLiteral(((ElementsList) f).isEmpty());
-        } else {
-            return null;
-        }
-
+        else
+            return new BooleanLiteral(false);
     }
 }

@@ -1,5 +1,8 @@
 package lexems.builtin;
 
+import exceptions.InterpreterException;
+import exceptions.InvalidArgumentTypesException;
+import exceptions.InvalidNumberOfArgumentsException;
 import lexems.Atom;
 import lexems.ElementsList;
 import lexems.Func;
@@ -16,10 +19,9 @@ public class Head extends Func implements IBuiltin {
         );
     }
 
-    public IElement execute(List<IElement> argValues) {
+    public IElement execute(List<IElement> argValues) throws InterpreterException {
         if (argValues.size() != 1){
-            // error
-            return null;
+            throw new InvalidNumberOfArgumentsException(argValues.size(), 1);
         }
 
         IElement f = argValues.get(0);
@@ -27,7 +29,7 @@ public class Head extends Func implements IBuiltin {
         if (f instanceof ElementsList) {
             return ((ElementsList) f).getFirst();
         } else {
-            return null;
+            throw new InvalidArgumentTypesException();
         }
 
     }

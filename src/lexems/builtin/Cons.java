@@ -1,5 +1,8 @@
 package lexems.builtin;
 
+import exceptions.InterpreterException;
+import exceptions.InvalidArgumentTypesException;
+import exceptions.InvalidNumberOfArgumentsException;
 import lexems.*;
 
 import java.util.List;
@@ -13,10 +16,9 @@ public class Cons extends Func implements IBuiltin {
         );
     }
 
-    public IElement execute(List<IElement> argValues) {
+    public IElement execute(List<IElement> argValues) throws InterpreterException  {
         if (argValues.size() != 2){
-            // error
-            return null;
+            throw new InvalidNumberOfArgumentsException(argValues.size(), 2);
         }
 
         IElement f = argValues.get(0);
@@ -27,7 +29,7 @@ public class Cons extends Func implements IBuiltin {
             list.addFirst(f);
             return list;
         } else {
-            return null;
+            throw new InvalidArgumentTypesException();
         }
 
     }
