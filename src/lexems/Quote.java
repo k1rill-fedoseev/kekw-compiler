@@ -13,4 +13,8 @@ public class Quote implements IElement {
                 "v=" + v +
                 '}';
     }
+
+    public IElement getV() {
+        return v;
+    }
 }

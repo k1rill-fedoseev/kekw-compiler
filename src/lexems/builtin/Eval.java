@@ -1,14 +1,18 @@
 package lexems.builtin;
 
 import exceptions.InvalidNumberOfArgumentsException;
-import lexems.*;
+import interpreter.SymbolTable;
+import lexems.Atom;
+import lexems.ElementsList;
+import lexems.Func;
+import lexems.IElement;
 
 import java.util.List;
 
-public class Quote extends Func implements IBuiltin {
-    public Quote() {
+public class Eval extends Func implements IBuiltin {
+    public Eval() {
         super(
-                new Atom("quote"),
+                new Atom("eval"),
                 List.of(new Atom("n1")),
                 new ElementsList()
         );

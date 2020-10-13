@@ -4,13 +4,11 @@ import exceptions.InterpreterException;
 import exceptions.InvalidArgumentTypesException;
 import lexems.*;
 import lexems.builtin.*;
-import lexems.builtin.Quote;
 import lexems.builtin.arithmetic.*;
 import lexems.builtin.comp.*;
 import lexems.builtin.logic.*;
 import lexems.builtin.predicates.*;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
@@ -60,7 +58,7 @@ public class Interpreter {
         globalScope.define(new Isatom());
         globalScope.define(new Islist());
 
-        globalScope.define(new Quote());
+        globalScope.define(new Eval());
 
         globalScope.define(new Print());
     }
@@ -96,7 +94,11 @@ public class Interpreter {
 
                 list.removeFirst();
                 // Builtin function
-                if (f instanceof IBuiltin) {
+                if (f instanceof Eval) {
+                    IElement result = execute(((Eval) f).execute(list), scope);
+                    stackTrace.pop();
+                    return result;
+                } else if (f instanceof IBuiltin) {
                     IElement result = ((IBuiltin) f).execute(list);
                     stackTrace.pop();
                     return result;
@@ -136,6 +138,8 @@ public class Interpreter {
                 else return null;
             }
             this.isBreak = false;
+        } else if (elem instanceof Quote) {
+            return ((Quote) elem).getV();
         } else if (elem instanceof Break) {
             this.isBreak = true;
         } else if (elem instanceof Return){
