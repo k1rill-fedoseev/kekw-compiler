@@ -18,7 +18,6 @@ public class Main {
             res.append("  ").append(elem).append(",\n\n");
         }
         res.append("]");
-        // System.out.println(res.toString());
         Interpreter interpreter = new Interpreter();
 
         int i = 0;

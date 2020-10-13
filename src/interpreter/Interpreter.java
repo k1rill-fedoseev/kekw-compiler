@@ -126,14 +126,16 @@ public class Interpreter {
                     return result;
                 }
             } else {
-                return elem;
+                return list;
             }
         } else if (elem instanceof While) {
             While w = (While) elem;
-            while (!this.isBreak) {
+            while (!this.isBreak && this.returnedValue == null) {
                 IElement condRes = execute(w.getC(), scope);
                 // Check condition type
-                if (!(condRes instanceof BooleanLiteral)) throw new InvalidArgumentTypesException();
+                if (!(condRes instanceof BooleanLiteral)) {
+                    throw new InvalidArgumentTypesException();
+                }
 
                 if (((BooleanLiteral) condRes).v) execute(w.getV(), scope);
                 else return null;
@@ -147,7 +149,7 @@ public class Interpreter {
             this.returnedValue = execute(((Return) elem).getV(), scope);
         } else if (elem instanceof Setq) {
             Setq sq = (Setq) elem;
-            scope.defineLookup(sq.getName(), execute(sq.getV()));
+            scope.defineLookup(sq.getName(), execute(sq.getV(), scope));
         } else if (elem instanceof Atom) {
             return scope.lookup(((Atom) elem).v);
         } else if (elem instanceof Func) {

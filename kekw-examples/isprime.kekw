@@ -1,0 +1,17 @@
+(func
+    isprime (n)
+    (
+        (setq i 2)
+        (while (lesseq (times i i) n)
+            (cond
+                (equal (times (divide n i) i) n)
+                (return (false i))
+                (setq i (plus 1 i))
+            )
+        )
+        (return true)
+    )
+)
+
+(isprime 1337)
+(isprime 1000000007)

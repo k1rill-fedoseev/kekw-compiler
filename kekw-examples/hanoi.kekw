@@ -1,0 +1,15 @@
+(func
+    hanoi (n from to tmp)
+    (cond (equal n 1)
+        (println "Move 1 from" from "to" to)
+        (
+            (hanoi (minus n 1) from tmp to)
+            (println "Move" n "from" from "to" to)
+            (hanoi (minus n 1) tmp to from)
+            (return "")
+        )
+    )
+
+)
+
+(hanoi 3 1 3 2)

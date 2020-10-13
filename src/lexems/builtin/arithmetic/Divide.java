@@ -26,7 +26,7 @@ public class Divide extends Func implements IBuiltin {
         IElement s = argValues.get(1);
 
         if (f instanceof IntegerLiteral && s instanceof IntegerLiteral) {
-            return new RealLiteral(((double) ((IntegerLiteral) f).v) / ((IntegerLiteral) s).v);
+            return new IntegerLiteral((((IntegerLiteral) f).v) / ((IntegerLiteral) s).v);
         }
         else if (f instanceof IntegerLiteral && s instanceof RealLiteral) {
             return new RealLiteral(((IntegerLiteral) f).v / ((RealLiteral) s).v);
