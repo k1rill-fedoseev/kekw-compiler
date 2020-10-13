@@ -1,0 +1,55 @@
+(func get (list i)
+    (
+        (setq lst list)
+        (setq x 0)
+        (while (less x i) ((setq lst (tail lst)) (setq x (plus x 1))))
+        (return (head lst))
+    )
+)
+
+(func concat2 (a1 a2)
+    (cond (isnull a1)
+        a2
+        (cons (head a1) (concat2 (tail a1) a2))
+    )
+)
+
+(func set (list i x)
+    (
+        (setq res ())
+        (setq lst list)
+        (setq p 0)
+
+        (while (less p i)
+            (
+                (setq res (concat2 res ((head lst))))
+                (setq lst (tail lst))
+                (setq p (plus p 1))
+            )
+        )
+        (setq lst (tail lst))
+        (setq res (concat2 res (x)))
+        (setq res (concat2 res lst))
+        (return res)
+    )
+)
+
+(func get2 (list i j)
+    (
+        (setq inner (get list i))
+        (return (get inner j))
+    )
+)
+
+(func set2 (list i j u)
+    (
+        (setq inner (get list i))
+        (setq inner (set inner j u))
+        (return (set list i inner))
+    )
+)
+
+(get (1 2 3 4) 0)
+(set (1 2 3 4) 2 5)
+(get2 ((1 2 3) (4 5 6)) 0 1)
+(set2 ((1 2 3) (4 5 6)) 0 1 9)
