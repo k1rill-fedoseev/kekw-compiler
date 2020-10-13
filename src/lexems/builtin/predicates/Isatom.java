@@ -22,9 +22,6 @@ public class Isatom extends Func implements IBuiltin {
 
         IElement f = argValues.get(0);
 
-        if (f instanceof Atom)
-            return new BooleanLiteral(true);
-        else
-            return new BooleanLiteral(false);
+        return new BooleanLiteral(f instanceof Atom);
     }
 }

@@ -22,9 +22,6 @@ public class Isnull extends Func implements IBuiltin {
 
         IElement f = argValues.get(0);
 
-        if (f instanceof ElementsList)
-            return new BooleanLiteral(((ElementsList) f).isEmpty());
-        else
-            return new BooleanLiteral(false);
+        return new BooleanLiteral(f instanceof ElementsList && ((ElementsList) f).isEmpty());
     }
 }
