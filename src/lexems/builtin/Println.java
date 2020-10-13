@@ -5,17 +5,17 @@ import lexems.*;
 
 import java.util.List;
 
-public class Print extends Func implements IBuiltin {
-    public Print() {
+public class Println extends Func implements IBuiltin {
+    public Println() {
         super(
-                new Atom("print"),
+                new Atom("println"),
                 List.of(new Atom("s")),
                 new ElementsList()
         );
     }
 
     public IElement execute(List<IElement> argValues) throws InvalidNumberOfArgumentsException {
-        for (IElement e: argValues) {
+        for (IElement e : argValues) {
             if (e instanceof StringLiteral) {
                 System.out.print(((StringLiteral) e).v + " ");
             } else if (e instanceof IntegerLiteral) {
@@ -28,6 +28,7 @@ public class Print extends Func implements IBuiltin {
                 System.out.print(e + " ");
             }
         }
+        System.out.println();
         return null;
     }
 }

@@ -61,6 +61,7 @@ public class Interpreter {
         globalScope.define(new Eval());
 
         globalScope.define(new Print());
+        globalScope.define(new Println());
     }
 
     public StackTraceElement[] getStackTrace() {
