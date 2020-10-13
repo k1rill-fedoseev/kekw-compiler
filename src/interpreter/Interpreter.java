@@ -19,6 +19,8 @@ public class Interpreter {
 
     public final Stack<StackTraceElement> stackTrace;
 
+    private boolean isBreak = false;
+
     public Interpreter() {
         stackTrace = new Stack<>();
 
@@ -72,6 +74,10 @@ public class Interpreter {
     }
 
     public IElement execute(IElement elem, SymbolTable scope) throws InterpreterException {
+        if (!(elem instanceof While) && this.isBreak) {
+            return null;
+        }
+
         if (elem instanceof ElementsList) {
             ElementsList list = ((ElementsList) elem).clone();
             if (list.isEmpty()) return list;
@@ -116,7 +122,7 @@ public class Interpreter {
             }
         } else if (elem instanceof While) {
             While w = (While) elem;
-            while (true) {
+            while (!this.isBreak) {
                 IElement condRes = execute(w.getC(), scope);
                 // Check condition type
                 if (!(condRes instanceof BooleanLiteral)) throw new InvalidArgumentTypesException();
@@ -124,6 +130,9 @@ public class Interpreter {
                 if (((BooleanLiteral) condRes).v) execute(w.getV(), scope);
                 else return null;
             }
+            this.isBreak = false;
+        } else if (elem instanceof Break) {
+            this.isBreak = true;
         } else if (elem instanceof Setq) {
             Setq sq = (Setq) elem;
             scope.define(sq.getName(), execute(sq.getV()));

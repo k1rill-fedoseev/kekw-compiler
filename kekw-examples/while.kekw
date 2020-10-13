@@ -2,9 +2,11 @@
 (setq x 1)
 x # 1
 (func mult2 (x) (times x 2))
+(func add_one (x) (plus x 1))
+(func my_break (break) (break))
 (while (less x 20) (setq x (mult2 x)))
 x # 32
 
 (setq x 0)
-(while (less x 10) (cond (greatereq x 5) (break) (setq x (add_one x))))
+(while (less x 10) (cond (greatereq x 5) (my_break) (setq x (add_one x))))
 x # 5

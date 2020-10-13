@@ -1,6 +1,6 @@
 # ARITHMETIC TEST
 (plus 1 2) # 3
-(plus -1 2) # 1
+(plus -1 (minus 2 3 1)) # 1
 (plus -1 -2) # -3
 (plus 1.2 2.3) # 3.5
 
