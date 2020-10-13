@@ -1,6 +1,8 @@
 package interpreter;
 
 import java.util.HashMap;
+import java.util.Objects;
+
 import lexems.*;
 
 public class SymbolTable {
@@ -22,12 +24,16 @@ public class SymbolTable {
         table.put(f.getName(), f);
     }
 
-    public void define(Setq s) {
-        table.put(s.getName(), s.getV());
-    }
-
     public void define(String s, IElement e) {
         table.put(s, e);
+    }
+
+    public void defineLookup(String s, IElement e) {
+        SymbolTable cur = this;
+        while (cur != null && !cur.table.containsKey(s)) {
+            cur = cur.parent;
+        }
+        Objects.requireNonNullElse(cur, this).define(s, e);
     }
 
     public IElement lookup(String name) {

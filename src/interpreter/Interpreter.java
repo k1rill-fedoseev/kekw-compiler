@@ -146,7 +146,7 @@ public class Interpreter {
             this.returnedValue = execute(((Return) elem).getV(), scope);
         } else if (elem instanceof Setq) {
             Setq sq = (Setq) elem;
-            scope.define(sq.getName(), execute(sq.getV()));
+            scope.defineLookup(sq.getName(), execute(sq.getV()));
         } else if (elem instanceof Atom) {
             return scope.lookup(((Atom) elem).v);
         } else if (elem instanceof Func) {

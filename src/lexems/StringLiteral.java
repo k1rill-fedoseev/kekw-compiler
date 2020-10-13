@@ -9,8 +9,6 @@ public class StringLiteral implements IElement {
 
     @Override
     public String toString() {
-        return "StringLiteral{" +
-                "v=" + v +
-                '}';
+        return v;
     }
 }
