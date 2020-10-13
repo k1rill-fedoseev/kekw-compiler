@@ -16,4 +16,12 @@ public class While implements IElement {
                 ", v=" + v +
                 '}';
     }
+
+    public IElement getC() {
+        return c;
+    }
+
+    public IElement getV() {
+        return v;
+    }
 }

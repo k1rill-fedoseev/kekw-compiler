@@ -1,6 +1,7 @@
 package interpreter;
 
 import exceptions.InterpreterException;
+import exceptions.InvalidArgumentTypesException;
 import lexems.*;
 import lexems.builtin.*;
 import lexems.builtin.Quote;
@@ -22,11 +23,14 @@ public class Interpreter {
         stackTrace = new Stack<>();
 
         globalScope = new SymbolTable();
+
+        // Arithmetics
         globalScope.define(new Plus());
         globalScope.define(new Minus());
         globalScope.define(new Times());
         globalScope.define(new Divide());
 
+        // List operations
         globalScope.define(new Head());
         globalScope.define(new Tail());
         globalScope.define(new Cons());
@@ -109,6 +113,16 @@ public class Interpreter {
                 }
             } else {
                 return elem;
+            }
+        } else if (elem instanceof While) {
+            While w = (While) elem;
+            while (true) {
+                IElement condRes = execute(w.getC(), scope);
+                // Check condition type
+                if (!(condRes instanceof BooleanLiteral)) throw new InvalidArgumentTypesException();
+
+                if (((BooleanLiteral) condRes).v) execute(w.getV(), scope);
+                else return null;
             }
         } else if (elem instanceof Setq) {
             Setq sq = (Setq) elem;
