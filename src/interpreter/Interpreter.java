@@ -20,6 +20,7 @@ public class Interpreter {
     public final Stack<StackTraceElement> stackTrace;
 
     private boolean isBreak = false;
+    private IElement returnedValue = null;
 
     public Interpreter() {
         stackTrace = new Stack<>();
@@ -74,7 +75,7 @@ public class Interpreter {
     }
 
     public IElement execute(IElement elem, SymbolTable scope) throws InterpreterException {
-        if (!(elem instanceof While) && this.isBreak) {
+        if (this.isBreak || this.returnedValue != null) {
             return null;
         }
 
@@ -114,6 +115,10 @@ public class Interpreter {
 
                     // Execute function
                     IElement result = execute(f.getV(), localScope);
+                    if (this.returnedValue != null) {
+                        result = this.returnedValue;
+                        this.returnedValue = null;
+                    }
                     stackTrace.pop();
                     return result;
                 }
@@ -133,6 +138,8 @@ public class Interpreter {
             this.isBreak = false;
         } else if (elem instanceof Break) {
             this.isBreak = true;
+        } else if (elem instanceof Return){
+            this.returnedValue = ((Return) elem).getV();
         } else if (elem instanceof Setq) {
             Setq sq = (Setq) elem;
             scope.define(sq.getName(), execute(sq.getV()));

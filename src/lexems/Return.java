@@ -13,4 +13,8 @@ public class Return implements IElement {
                 "v=" + v +
                 '}';
     }
+
+    public IElement getV() {
+        return v;
+    }
 }

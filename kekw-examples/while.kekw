@@ -3,7 +3,7 @@
 x # 1
 (func mult2 (x) (times x 2))
 (func add_one (x) (plus x 1))
-(func my_break (break) (break))
+(func my_break () (break))
 (while (less x 20) (setq x (mult2 x)))
 x # 32
 
