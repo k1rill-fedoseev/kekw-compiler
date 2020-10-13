@@ -22,19 +22,15 @@ public class Print extends Func implements IBuiltin {
         IElement s = argValues.get(0);
         if (s instanceof StringLiteral) {
             System.out.println(((StringLiteral) s).v);
-            return s;
         } else if (s instanceof IntegerLiteral) {
             System.out.println(((IntegerLiteral) s).v);
-            return s;
         } else if (s instanceof RealLiteral) {
             System.out.println(((RealLiteral) s).v);
-            return s;
         } else if (s instanceof BooleanLiteral) {
             System.out.println(((BooleanLiteral) s).v);
-            return s;
         } else {
             System.out.println(s);
-            return s;
         }
+        return null;
     }
 }

@@ -9,8 +9,6 @@ public class IntegerLiteral implements IElement {
 
     @Override
     public String toString() {
-        return "IntegerLiteral{" +
-                "v=" + v +
-                '}';
+        return String.valueOf(v);
     }
 }

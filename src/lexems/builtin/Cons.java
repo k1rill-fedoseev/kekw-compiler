@@ -25,7 +25,8 @@ public class Cons extends Func implements IBuiltin {
         IElement s = argValues.get(1);
 
         if (s instanceof ElementsList) {
-            ElementsList list = (ElementsList) s;
+            ElementsList list = new ElementsList();
+            list.addAll((ElementsList) s);
             list.addFirst(f);
             return list;
         } else {

@@ -9,8 +9,6 @@ public class RealLiteral implements IElement {
 
     @Override
     public String toString() {
-        return "RealLiteral{" +
-                "v=" + v +
-                '}';
+        return String.valueOf(v);
     }
 }

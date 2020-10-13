@@ -14,7 +14,7 @@ public class Main {
             System.exit(1);
         }
         StringBuilder res = new StringBuilder("ElementsList[\n");
-        for (IElement elem: ast) {
+        for (IElement elem : ast) {
             res.append("  ").append(elem).append(",\n\n");
         }
         res.append("]");
@@ -22,10 +22,13 @@ public class Main {
         Interpreter interpreter = new Interpreter();
 
         int i = 0;
-        for (IElement elem: ast) {
+        for (IElement elem : ast) {
             try {
                 interpreter.stackTrace.add(new StackTraceElement("", "main", "", Parser.lines.get(i++)));
-                System.out.println(interpreter.execute(elem));
+                IElement executed = interpreter.execute(elem);
+                if (executed != null) {
+                    System.out.println(executed);
+                }
                 interpreter.stackTrace.pop();
             } catch (InterpreterException e) {
                 e.setStackTrace(interpreter.getStackTrace());

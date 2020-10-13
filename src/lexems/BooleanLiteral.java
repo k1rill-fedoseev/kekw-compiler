@@ -9,8 +9,6 @@ public class BooleanLiteral implements IElement {
 
     @Override
     public String toString() {
-        return "BooleanLiteral{" +
-                "v=" + v +
-                '}';
+        return String.valueOf(v);
     }
 }

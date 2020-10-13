@@ -142,7 +142,6 @@ class MyLexer implements Parser.Lexer {
                 return QUOTE_SYMBOL;
             case '\"':
                 lastToken = new StringLiteral(v);
-                System.out.println(lastToken);
                 return STRING;
             default:
                 lastToken = new BadToken(String.valueOf(ttype));
