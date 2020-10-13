@@ -2,11 +2,11 @@
 (setq lst '(1 2 3 4 5)) # (1 2 3 4 5)
 (setq x 777)
 (prog (x y) (
-        (setq x 0)
+        (setq x 123)
         (setq y lst)
         (return x)
     )
-) # 0
+) # 123
 x # 777
 lst # (1 2 3 4 5)
 

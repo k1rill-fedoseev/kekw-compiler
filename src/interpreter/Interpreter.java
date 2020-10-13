@@ -139,7 +139,7 @@ public class Interpreter {
         } else if (elem instanceof Break) {
             this.isBreak = true;
         } else if (elem instanceof Return){
-            this.returnedValue = ((Return) elem).getV();
+            this.returnedValue = execute(((Return) elem).getV(), scope);
         } else if (elem instanceof Setq) {
             Setq sq = (Setq) elem;
             scope.define(sq.getName(), execute(sq.getV()));
@@ -157,6 +157,15 @@ public class Interpreter {
                 else
                     return execute(c.getE(), scope);
             }
+        } else if (elem instanceof Prog) {
+            Prog prog = (Prog) elem;
+            Lambda tmp = new Lambda(prog.getArgs(), prog.getV(), 0);
+            ElementsList list = new ElementsList();
+            list.add(tmp);
+            for (IElement e: prog.getArgs()) {
+                list.add(new ElementsList());
+            }
+            return execute(list, scope);
         } else {
             return elem;
         }
