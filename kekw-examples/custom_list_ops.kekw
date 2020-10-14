@@ -41,15 +41,15 @@
     )
 )
 
-(func set2 (list i j u)
+(func set2 (list i j x)
     (
         (setq inner (get list i))
-        (setq inner (set inner j u))
+        (setq inner (set inner j x))
         (return (set list i inner))
     )
 )
 
-(get (1 2 3 4) 0)
+(get (1 2 3 4) 2)
 (set (1 2 3 4) 2 5)
 (get2 ((1 2 3) (4 5 6)) 0 1)
 (set2 ((1 2 3) (4 5 6)) 0 1 9)

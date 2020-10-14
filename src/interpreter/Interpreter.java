@@ -10,6 +10,7 @@ import lexems.builtin.logic.*;
 import lexems.builtin.predicates.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 public class Interpreter {
@@ -151,7 +152,8 @@ public class Interpreter {
             Setq sq = (Setq) elem;
             scope.defineLookup(sq.getName(), execute(sq.getV(), scope));
         } else if (elem instanceof Atom) {
-            return scope.lookup(((Atom) elem).v);
+            String name = ((Atom) elem).v;
+            return Objects.requireNonNullElse(scope.lookup(name), globalScope.lookup(name));
         } else if (elem instanceof Func) {
             scope.define((Func) elem);
         } else if (elem instanceof Cond) {
@@ -166,13 +168,24 @@ public class Interpreter {
             }
         } else if (elem instanceof Prog) {
             Prog prog = (Prog) elem;
-            Lambda tmp = new Lambda(prog.getArgs(), prog.getV(), 0);
-            ElementsList list = new ElementsList();
-            list.add(tmp);
-            for (IElement e: prog.getArgs()) {
-                list.add(new ElementsList());
+
+            // Create function local scope
+            // Define current scope as a parent
+            SymbolTable localScope = new SymbolTable(scope, true);
+
+            // Fill local scope with provided values
+            List<Atom> argNames = prog.getArgs();
+            for (int i = 0; i < argNames.size(); i++) {
+                localScope.define(argNames.get(i).getV(), new ElementsList());
             }
-            return execute(list, scope);
+
+            // Execute function
+            IElement result = execute(prog.getV(), localScope);
+            if (this.returnedValue != null) {
+                result = this.returnedValue;
+                this.returnedValue = null;
+            }
+            return result;
         } else {
             return elem;
         }

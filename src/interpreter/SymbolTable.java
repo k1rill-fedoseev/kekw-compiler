@@ -8,6 +8,7 @@ import lexems.*;
 public class SymbolTable {
     private final SymbolTable parent;
     private final HashMap<String, IElement> table;
+    private boolean isTransient = false;
 
     public SymbolTable() {
         parent = null;
@@ -19,7 +20,11 @@ public class SymbolTable {
         table = new HashMap<>();
     }
 
-    // TODO: check existence of an identifier
+    public SymbolTable(SymbolTable p, boolean isTransient) {
+        this(p);
+        this.isTransient = isTransient;
+    }
+
     public void define(Func f) {
         table.put(f.getName(), f);
     }
@@ -30,7 +35,7 @@ public class SymbolTable {
 
     public void defineLookup(String s, IElement e) {
         SymbolTable cur = this;
-        while (cur != null && !cur.table.containsKey(s)) {
+        while (cur != null && !cur.table.containsKey(s) && cur.isTransient) {
             cur = cur.parent;
         }
         Objects.requireNonNullElse(cur, this).define(s, e);
@@ -38,10 +43,14 @@ public class SymbolTable {
 
     public IElement lookup(String name) {
         IElement e = table.get(name);
-        if (e == null && parent != null){
+        if (e == null && parent != null && isTransient){
             e = parent.lookup(name);
         }
         return e;
+    }
+
+    public boolean contains(String name) {
+        return this.table.containsKey(name);
     }
 
     public String toString() {
